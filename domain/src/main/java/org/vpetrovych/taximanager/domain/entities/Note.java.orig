@@ -1,0 +1,104 @@
+package com.od.eisgroup.interviewer.domain.entity;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.CascadeType;
+import javax.persistence.ManyToOne;
+import javax.persistence.JoinColumn;
+import javax.persistence.ForeignKey;
+
+/**
+ * <p>
+ *     This class is an entity of Notes.
+ * </p>
+ *
+ * @author <a href='mailto:antoxalanio@gmail.com'>Anton Lomakin</a>
+ *
+ * @since 1.0
+ */
+
+//@Entity
+public class Note extends AbstractEntity {
+
+    @Column(nullable = false)
+    private String criteria;
+
+    @Column(nullable = false)
+    private String noteText;
+
+    @Column(nullable = false)
+    private Integer score;
+
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "interviewer_id", foreignKey = @ForeignKey(name = "FK_Notes_Interviewer"))
+    private Interviewer interviewer;
+
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "interview_id", foreignKey = @ForeignKey(name = "FK_Notes_Interview"))
+    private Interview interview;
+
+
+    public Interviewer getInterviewer() {
+        return interviewer;
+    }
+
+    public void setInterviewer(Interviewer interviewer) {
+        this.interviewer = interviewer;
+    }
+
+    public Interview getInterview() {
+        return interview;
+    }
+
+    public void setInterview(Interview interview) {
+        this.interview = interview;
+    }
+
+    public String getCriteria() {
+        return criteria;
+    }
+
+    public void setCriteria(String criteria) {
+        this.criteria = criteria;
+    }
+
+    public String getNoteText() {
+        return noteText;
+    }
+
+    public void setNoteText(String noteText) {
+        this.noteText = noteText;
+    }
+
+    public Integer getScore() {
+        return score;
+    }
+
+    public void setScore(Integer score) {
+        this.score = score;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = 1;
+        final int prime = 31;
+
+        result *= prime + (getCriteria() == null ? 0 : getCriteria().hashCode());
+        result *= prime + (getNoteText() == null ? 0 : getNoteText().hashCode());
+        result *= prime + (getScore() == null ? 0 : getScore().hashCode());
+
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {return true;}
+        if (!(obj instanceof Note)) {return false;}
+        Note that = (Note) obj;
+        return (getCriteria() != null && getCriteria().equals(that.getCriteria())) &&
+                (getNoteText() != null && getNoteText().equals(that.getNoteText())) &&
+                (getScore() != null && getScore().equals(that.getScore())) &&
+                (getInterviewer() != null && getInterviewer().equals(that.getInterviewer())) &&
+                (getInterview() != null && getInterview().equals(that.getInterview()));
+    }
+}

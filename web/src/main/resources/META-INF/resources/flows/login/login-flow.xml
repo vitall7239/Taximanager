@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.springframework.org/schema/webflow
+                          http://www.springframework.org/schema/webflow/spring-webflow.xsd">
+
+    <on-start>
+        <evaluate expression="loginBean" result="flowScope.loginBean"></evaluate>
+        <evaluate expression="registerBean" result="flowScope.registerBean"></evaluate>
+    </on-start>
+
+    <view-state id="login" view="/pages/index.xhtml">
+        <transition on="login" to="quizEdit">
+            <evaluate expression="loginBean.login()"></evaluate>
+        </transition>
+        <transition on="error"></transition>
+        <transition on="driver" to="goDriver"/>
+        <transition on="manager" to="goManager"/>
+        <transition on="admin" to="goAdmin"/>
+        <transition on="register" to="register">
+            <evaluate expression="registerBean.clean()"></evaluate>
+        </transition>
+    </view-state>
+
+    <view-state id="register" view="/pages/register.xhtml">
+        <transition on="registration">
+            <evaluate expression="registerBean.register()"></evaluate>
+        </transition>
+        <transition on="back" to="login"/>
+    </view-state>
+
+    <end-state id="goDriver" view="externalRedirect:contextRelative:/flows/driver"/>
+
+    <end-state id="goManager" view="externalRedirect:contextRelative:/flows/manager"/>
+
+    <end-state id="goAdmin" view="externalRedirect:contextRelative:/flows/admin"/>
+
+</flow>

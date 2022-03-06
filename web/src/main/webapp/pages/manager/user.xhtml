@@ -1,0 +1,78 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="../template/template_inner.xhtml">
+
+    <ui:define name="title">TaxiManager - My info</ui:define>
+
+    <ui:define name="content">
+        <div class="user_wrap">
+            <h1>My info</h1>
+            <div class="user_form_wrap">
+                <h:form id="userForm">
+                    <p>
+                        <h:outputLabel for="userPhoneInput" value="Phone:"/>
+                        <h:inputText autocomplete="off" disabled="true" id="userPhoneInput" class="tel" value="#{managerUser.user.phone}" />
+                        <h:message  class="error_message" for="userPhoneInput" id="userPhoneError" />
+                    </p>
+                    <p>
+                        <h:outputLabel for="userEmailInput" value="Email:"/>
+                        <h:inputText autocomplete="off" disabled="true" id="userEmailInput" value="#{managerUser.user.email}" />
+                        <h:message for="userEmailInput" class="error_message" id="userEmailError" />
+                    </p>
+                    <p>
+                        <h:outputLabel for="ageInput" value="Age:"/>
+                        <h:inputText autocomplete="off" id="ageInput" value="#{managerUser.user.age}" required="true" requiredMessage="This field is required.">
+                            <f:validator validatorId="age-validator" />
+                            <p:ajax update="@this" event="change" />
+                        </h:inputText>
+                        <h:message for="ageInput" class="error_message" id="ageError" />
+                    </p>
+                    <p>
+                        <h:outputLabel for="firstNameInput" value="Name:"/>
+                        <h:inputText autocomplete="off" id="firstNameInput" value="#{managerUser.user.firstName}" required="true"
+                                     requiredMessage="This field is required.">
+                            <f:validator validatorId="user-name-validator" />
+                            <p:ajax update="@this" event="change" />
+                        </h:inputText>
+                        <h:message for="firstNameInput" class="error_message" id="firstNameError" />
+                    </p>
+                    <p>
+                        <h:outputLabel for="lastNameInput" value="Surname:"/>
+                        <h:inputText autocomplete="off" id="lastNameInput" value="#{managerUser.user.lastName}" required="true"
+                                     requiredMessage="This field is required.">
+                            <f:validator validatorId="user-name-validator" />
+                            <p:ajax update="@this" event="change" />
+                        </h:inputText>
+                        <h:message for="lastNameInput" class="error_message" id="lastNameError" />
+                    </p>
+                    <p>
+                        <h:outputLabel for="fatherNameInput" value="Middle name:"/>
+                        <h:inputText autocomplete="off" id="fatherNameInput" value="#{managerUser.user.fatherName}" required="true"
+                                     requiredMessage="This field is required.">
+                            <f:validator validatorId="user-name-validator" />
+                            <p:ajax update="@this" event="change" />
+                        </h:inputText>
+                        <h:message for="fatherNameInput" class="error_message" id="fatherNameError" />
+                    </p>
+                    <div class="clear"></div>
+                    <div class="link">
+                        <h:commandButton value="Save" class="button_link" action="saveUser">
+                            <p:ajax update="@this"/>
+                        </h:commandButton>
+                    </div>
+                </h:form>
+            </div>
+        </div>
+    </ui:define>
+
+    <ui:define name="popup">
+    </ui:define>
+
+</ui:composition>
+
+</html>

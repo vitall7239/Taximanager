@@ -1,0 +1,140 @@
+package com.od.eisgroup.interviewer.domain.entity;
+
+import javax.persistence.Entity;
+import javax.persistence.Column;
+import javax.persistence.ManyToOne;
+import javax.persistence.CascadeType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ForeignKey;
+import javax.persistence.Table;
+import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
+
+//@Entity
+@Table(name="users")
+public class User extends AbstractEntity {
+
+    @Column(name = "first_name", nullable = false)
+    private String firstName;
+
+    @Column(name = "last_name", nullable = false)
+    private String lastName;
+
+    @ManyToOne(cascade = {CascadeType.PERSIST})
+    @JoinColumn(name = "position_id", foreignKey = @ForeignKey(name = "FK_User_Position"))
+    private Position position;
+
+    @Column(nullable = false, unique = true)
+    private String email;
+
+    @Column(name = "usr_password", nullable = false)
+    private String password;
+
+    @Column(name = "last_evaluated")
+    private LocalDate lastEvaluationDate;
+
+    @Column(name = "last_quiz_pass")
+    private LocalDate lastQuizPassingDate;
+
+    @ManyToMany
+    @JoinTable(
+            name = "usersRoles", foreignKey = @ForeignKey(name = "user_role_fk"),
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> roles = new HashSet<>();
+
+    public User() {
+    }
+
+    public User(String firstName, String lastName, String email) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public Position getPosition() {
+        return position;
+    }
+
+    public void setPosition(Position position) {
+        this.position = position;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public LocalDate getLastEvaluationDate() {
+        return lastEvaluationDate;
+    }
+
+    public void setLastEvaluationDate(LocalDate lastEvaluationDate) {
+        this.lastEvaluationDate = lastEvaluationDate;
+    }
+
+    public LocalDate getLastQuizPassingDate() {
+        return lastQuizPassingDate;
+    }
+
+    public void setLastQuizPassingDate(LocalDate lastQuizPassingDate) {
+        this.lastQuizPassingDate = lastQuizPassingDate;
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof User)) return false;
+        User user = (User) obj;
+        return (getFirstName() != null && getFirstName().equals(user.getFirstName()))
+                && (getLastName() != null && getLastName().equals(user.getLastName()))
+                && (getEmail() != null && getEmail().equals(user.getEmail()));
+    }
+
+    @Override
+    public int hashCode() {
+        int prime = 31;
+        int result = getEmail() == null ? 0 : getEmail().hashCode();
+        result = prime * result + (getFirstName() == null ? 0 : getFirstName().hashCode());
+        result = prime * result + (getLastName() == null ? 0 : getLastName().hashCode());
+        return result;
+    }
+}

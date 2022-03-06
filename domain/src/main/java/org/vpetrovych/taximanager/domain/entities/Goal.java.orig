@@ -1,0 +1,90 @@
+package com.od.eisgroup.interviewer.domain.entity;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import javax.persistence.ForeignKey;
+import javax.persistence.JoinColumn;
+import java.util.Objects;
+
+//@Entity
+public class Goal extends AbstractEntity {
+
+    @Column(nullable = false)
+    private String title;
+
+    @Column(nullable = false)
+    private Boolean fileAttached;
+
+    @Column(nullable = false)
+    private String results;
+
+    @Column
+    private String goalDescription;
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public Boolean getFileAttached() {
+        return fileAttached;
+    }
+
+    public void setFileAttached(Boolean fileAttached) {
+        this.fileAttached = fileAttached;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "performance_evaluation_id", foreignKey = @ForeignKey(name = "FK_performance_evaluation"))
+    private PerformanceEvaluation performanceEvaluation;
+
+    public PerformanceEvaluation getPerformanceEvaluation() {
+        return performanceEvaluation;
+    }
+
+    public void setPerformanceEvaluation(PerformanceEvaluation performanceEvaluation) {
+        this.performanceEvaluation = performanceEvaluation;
+    }
+
+    public String getResult() {
+        return results;
+    }
+
+    public void setResult(String results) {
+        this.results = results;
+    }
+
+    public String getDescription() {
+        return goalDescription;
+    }
+
+    public void setDescription(String goalDescription) {
+        this.goalDescription = goalDescription;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if(this == o)
+        {
+            return true;
+        }
+        if(!(o instanceof Goal))
+        {
+            return false;
+        }
+
+        Goal g = (Goal) o;
+        return Objects.equals(this.getTitle(), g.getTitle()) &&
+                Objects.equals(this.getDescription(), g.getDescription());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.getTitle(), this.getDescription());
+    }
+
+}

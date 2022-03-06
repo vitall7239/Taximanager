@@ -1,0 +1,95 @@
+package com.od.eisgroup.interviewer.domain.entity;
+
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import java.time.LocalDate;
+
+/**
+ * <p>
+ *     This class is an entity of Quiz_result.
+ * </p>
+ *
+ * @author <a href='mailto:rznamerovskiy@gmail.com'>Roman Znamerovskiy</a>
+ *
+ * @since 1.0
+ */
+//@Entity
+public class QuizResult extends AbstractEntity {
+
+    @Column(name = "score", nullable = false)
+    private Double score;
+
+    @Column(name = "passing_date", nullable = false)
+    private LocalDate passingDate;
+
+    @ManyToOne
+    @JoinColumn(name = "quiz_id", foreignKey = @ForeignKey(name = "FK_Quiz_result_Quiz"))
+    private Quiz quiz;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "FK_Quiz_result_User"))
+    private User user;
+
+    public Double getScore() {
+        return score;
+    }
+
+    public void setScore(Double score) {
+        this.score = score;
+    }
+
+    public LocalDate getPassingDate() {
+        return passingDate;
+    }
+
+    public void setPassingDate(LocalDate passingDate) {
+        this.passingDate = passingDate;
+    }
+
+    public Quiz getQuiz() {
+        return quiz;
+    }
+
+    public void setQuiz(Quiz quiz) {
+        this.quiz = quiz;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (!(o instanceof QuizResult)) {
+            return false;
+        }
+
+        QuizResult that = (QuizResult) o;
+        return (Double.compare(getScore(), that.getScore()) == 0) &&
+                getPassingDate().equals(that.getPassingDate()) &&
+                getQuiz().equals(that.getQuiz()) &&
+                getUser().equals(that.getUser());
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + getScore().intValue();
+        result = prime * result + getPassingDate().hashCode();
+        return result;
+    }
+
+}

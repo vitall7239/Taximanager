@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<ui:composition template="template/template.xhtml">
+
+    <ui:define name = "title">TaxiManager - Registration</ui:define>
+
+    <ui:define name="content">
+        <div class="welcome_wrap">
+            <div class="welcome_block">
+                <div class="text">Registration in TaxiManager</div>
+                <div class="form">
+                    <h:form id="registerForm">
+                        <p>
+                            <h:outputLabel for="phoneInput" value="Phone:"/>
+                            <h:inputText autocomplete="off" id="phoneInput" class="tel" value="#{registerBean.phone}" required="true"
+                                         requiredMessage="This field is required."  placeholder="+38 (___) ___-__-__">
+                                <f:validator validatorId="phone-validator" />
+                            </h:inputText>
+                            <h:message for="phoneInput" class="error_message" id="phoneError" />
+                        </p>
+                        <p>
+                            <h:outputLabel for="passwordInput" value="Password:"/>
+                            <h:inputSecret autocomplete="off" id="passwordInput" binding="#{passwordComponent}" value="#{registerBean.password}">
+                                <f:validator validatorId="password-validator" />
+                            </h:inputSecret>
+                            <h:message for="passwordInput" class="error_message" id="passwordError" />
+                        </p>
+                        <p>
+                            <h:outputLabel for="confirmPasswordInput" value="Repeat password:"/>
+                            <h:inputSecret autocomplete="off" id="confirmPasswordInput" value="#{registerBean.confirmPassword}" required="true"
+                                           requiredMessage="This field is required.">
+                                <f:validator validatorId="confirm-password-validator" />
+                                <f:attribute name="passwordComponent" value="#{passwordComponent}" />
+                            </h:inputSecret>
+                            <h:message for="confirmPasswordInput" class="error_message" id="confirmPasswordError" />
+                        </p>
+                        <p>
+                            <h:outputLabel for="firstNameInput" value="Name:"/>
+                            <h:inputText autocomplete="off" id="firstNameInput" value="#{registerBean.firstName}" required="true"
+                                         requiredMessage="This field is required.">
+                                <f:validator validatorId="user-name-validator" />
+                            </h:inputText>
+                            <h:message for="firstNameInput" class="error_message" id="firstNameError" />
+                        </p>
+                        <p>
+                            <h:outputLabel for="lastNameInput" value="Surname:"/>
+                            <h:inputText autocomplete="off" id="lastNameInput" value="#{registerBean.lastName}" required="true"
+                                         requiredMessage="This field is required.">
+                                <f:validator validatorId="user-name-validator" />
+                            </h:inputText>
+                            <h:message for="lastNameInput" class="error_message" id="lastNameError" />
+                        </p>
+                        <p>
+                            <h:outputLabel for="fatherNameInput" value="Middle name:"/>
+                            <h:inputText autocomplete="off" id="fatherNameInput" value="#{registerBean.fatherName}" required="true"
+                                         requiredMessage="This field is required.">
+                                <f:validator validatorId="user-name-validator" />
+                            </h:inputText>
+                            <h:message for="fatherNameInput" class="error_message" id="fatherNameError" />
+                        </p>
+                        <p>
+                            <h:outputLabel for="emailInput" value="Email:"/>
+                            <h:inputText autocomplete="off" id="emailInput" value="#{registerBean.email}" required="true" requiredMessage="This field is required.">
+                                <f:validator validatorId="email-validator" />
+                            </h:inputText>
+                            <h:message for="emailInput" class="error_message" id="emailError" />
+                        </p>
+                        <p>
+                            <h:outputLabel for="ageInput" value="Age:"/>
+                            <h:inputText autocomplete="off" id="ageInput" value="#{registerBean.age}" required="true" requiredMessage="This field is required.">
+                                <f:validator validatorId="age-validator" />
+                            </h:inputText>
+                            <h:message for="ageInput" class="error_message" id="ageError" />
+                        </p>
+                        <h:commandButton value="Register" class="button_link" action="#{registerBean.register}" ajax="false"/>
+                    </h:form>
+                </div>
+                <div class="other_link">
+                    <h:form>
+                        <h:commandLink value="Back" action="back" class="button_link reg" />
+                    </h:form>
+                </div>
+            </div>
+        </div>
+    </ui:define>
+
+</ui:composition>
+
+</html>

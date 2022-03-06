@@ -1,0 +1,130 @@
+package com.od.eisgroup.interviewer.domain.entity;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Enumerated;
+import javax.persistence.CascadeType;
+import javax.persistence.EnumType;
+import javax.persistence.ManyToOne;
+import javax.persistence.ManyToMany;
+import javax.persistence.JoinTable;
+import javax.persistence.JoinColumn;
+import javax.persistence.ForeignKey;
+import javax.persistence.OneToMany;
+
+import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
+
+/**
+ * <p>
+ *     This class is an entity of Interview.
+ * </p>
+ *
+ * @author <a href='mailto:antoxalanio@gmail.com'>Anton Lomakin</a>
+ * @author <a href='mailto:samsonov.a@ukr.net'>Andrew Samsonov</a>
+ *
+ * @since 1.0
+ */
+
+//@Entity
+public class Interview extends AbstractEntity {
+
+    @Column(nullable = false)
+    private String position;
+
+    @Column(nullable = false)
+    private LocalDate date;
+
+    @Column(nullable = false)
+    @Enumerated(value = EnumType.STRING)
+    private Status status = Status.SCHEDULED;
+
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "candidate_id", foreignKey = @ForeignKey(name = "FK_Candidate_Interview"))
+    private Candidate candidate;
+
+    @ManyToMany(cascade = CascadeType.PERSIST)
+    @JoinTable(name = "interviewInterviewer", joinColumns = @JoinColumn(name = "interview_id"),
+               inverseJoinColumns = @JoinColumn(name = "interviewer_id"),
+               foreignKey = @ForeignKey(name = "FK_Interviewer_Interview"))
+    private Set<Interviewer> interviewers = new HashSet<>();
+
+    @OneToMany(mappedBy = "interview", cascade = CascadeType.ALL)
+    private Set<Note> notes = new HashSet<>();
+
+    public String getPosition() {
+        return position;
+    }
+
+    public void setPosition(String position) {
+        this.position = position;
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    public Set<Interviewer> getInterviewers() {
+        return interviewers;
+    }
+
+    public void setInterviewers(Set<Interviewer> interviewers) {
+        this.interviewers = interviewers;
+    }
+
+    public Candidate getCandidate() {
+        return candidate;
+    }
+
+    public void setCandidate(Candidate candidate) {
+        this.candidate = candidate;
+    }
+
+    public Set<Note> getNotes() {
+        return notes;
+    }
+
+    public void setNotes(Set<Note> notes) {
+        this.notes = notes;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Interview)) {
+            return false;
+        }
+        Interview interview = (Interview) o;
+
+        return (getPosition() != null && getPosition().equals(interview.getPosition())) &&
+                (getDate() != null && getDate().equals(interview.getDate())) &&
+                (getCandidate() != null && getCandidate().equals(interview.getCandidate())) &&
+                (getStatus() != null && getStatus().equals(interview.getStatus()));
+    }
+
+    @Override
+    public int hashCode() {
+        int result = 1;
+        final int prime = 31;
+        result = result * prime + (getDate() == null ? 0 : getDate().hashCode());
+        result = result * prime + (getPosition() == null ? 0 : getPosition().hashCode());
+        result = result * prime + (getCandidate() == null ? 0 : getCandidate().hashCode());
+        result = result * prime + (getStatus() == null ? 0 : getStatus().hashCode());
+        return result;
+    }
+}

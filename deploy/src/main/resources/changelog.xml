@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+
+    <changeSet id="2" author="vpetrovych">
+        <createTable tableName="Role">
+            <column name="id" type="java.sql.Types.NUMERIC">
+                <constraints primaryKey="true" primaryKeyName="PK_role"/>
+            </column>
+            <column name="name" type="java.sql.Types.VARCHAR(100)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="3" author="vpetrovych">
+        <insert tableName="Role">
+            <column name="id">0</column>
+            <column name="name">ADMIN</column>
+        </insert>
+    </changeSet>
+
+    <changeSet id="4" author="vpetrovych">
+        <insert tableName="Role">
+            <column name="id">1</column>
+            <column name="name">DRIVER</column>
+        </insert>
+    </changeSet>
+
+    <changeSet id="5" author="vpetrovych">
+        <insert tableName="Role">
+            <column name="id">2</column>
+            <column name="name">MANAGER</column>
+        </insert>
+    </changeSet>
+
+    <changeSet id="7" author="vpetrovych">
+        <createTable tableName="users">
+            <column name="id" type="NUMERIC">
+                <constraints primaryKey="true" primaryKeyName="PK_users_id"/>
+            </column>
+            <column name="firstName" type="VARCHAR(255)">
+                <constraints nullable="false" unique="false"/>
+            </column>
+            <column name="lastName" type="VARCHAR(255)">
+                <constraints nullable="false" unique="false"/>
+            </column>
+            <column name="fatherName" type="VARCHAR(255)">
+                <constraints nullable="false" unique="false"/>
+            </column>
+            <column name="email" type="VARCHAR(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="phone" type="VARCHAR(17)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="age" type="NUMERIC">
+                <constraints nullable="false" unique="false"/>
+            </column>
+            <column name="usr_password" type="VARCHAR(60)">
+                <constraints nullable="false" unique="false"/>
+            </column>
+            <column name="role_id" type="NUMERIC">
+                <constraints nullable="false" unique="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="8" author="vpetrovych">
+        <addForeignKeyConstraint baseTableName="users" baseColumnNames="role_id"
+                                 constraintName="FK_users_Role"
+                                 referencedTableName="Role" referencedColumnNames="id"/>
+    </changeSet>
+
+    <changeSet id="10a" author="vpetrovych">
+        <insert tableName="users">
+            <column name="id">1000000000</column>
+            <column name="firstName">Admin</column>
+            <column name="lastName">Admin</column>
+            <column name="fatherName">Admin</column>
+            <column name="email">admin@test.com</column>
+            <column name="phone">+38(000)000-00-00</column>
+            <column name="age">20</column>
+            <column name="usr_password">$2a$10$wv8DzMF6YYx6ynfu8T/kRef6ujYsxzsvZWnOsMqQJE0hZu8DsMCzW</column> <!--1234Qwer-->
+            <column name="role_id">0</column>
+        </insert>
+    </changeSet>
+
+    <changeSet id="10d" author="vpetrovych">
+        <insert tableName="users">
+            <column name="id">1000000001</column>
+            <column name="firstName">Driver</column>
+            <column name="lastName">Driver</column>
+            <column name="fatherName">Driver</column>
+            <column name="email">driver@test.com</column>
+            <column name="phone">+38(011)111-11-11</column>
+            <column name="age">20</column>
+            <column name="usr_password">$2a$10$wv8DzMF6YYx6ynfu8T/kRef6ujYsxzsvZWnOsMqQJE0hZu8DsMCzW</column> <!--1234Qwer-->
+            <column name="role_id">1</column>
+        </insert>
+    </changeSet>
+
+    <changeSet id="10m" author="vpetrovych">
+        <insert tableName="users">
+            <column name="id">1000000002</column>
+            <column name="firstName">Manager</column>
+            <column name="lastName">Manager</column>
+            <column name="fatherName">Manager</column>
+            <column name="email">manager@test.com</column>
+            <column name="phone">+38(022)222-22-22</column>
+            <column name="age">20</column>
+            <column name="usr_password">$2a$10$wv8DzMF6YYx6ynfu8T/kRef6ujYsxzsvZWnOsMqQJE0hZu8DsMCzW</column> <!--1234Qwer-->
+            <column name="role_id">2</column>
+        </insert>
+    </changeSet>
+
+    <changeSet id="9" author="vpetrovych">
+        <createTable tableName="Car">
+            <column name="id" type="NUMERIC">
+                <constraints primaryKey="true" primaryKeyName="PK_Car_Id"/>
+            </column>
+            <column name="mark" type="VARCHAR(255)">
+                <constraints nullable="false" unique="false"/>
+            </column>
+            <column name="model" type="VARCHAR(255)">
+                <constraints nullable="false" unique="false"/>
+            </column>
+            <column name="color" type="VARCHAR(255)">
+                <constraints nullable="false" unique="false"/>
+            </column>
+            <column name="year" type="NUMERIC">
+                <constraints nullable="false" unique="false"/>
+            </column>
+            <column name="number" type="VARCHAR(20)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="driverNumber" type="VARCHAR(20)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="user_id" type="NUMERIC">
+                <constraints nullable="false" unique="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="10" author="vpetrovych">
+        <addForeignKeyConstraint baseTableName="Car" baseColumnNames="user_id"
+                                 constraintName="FK_Users_Car"
+                                 referencedTableName="users" referencedColumnNames="id"/>
+    </changeSet>
+
+    <changeSet id="11" author="vpetrovych">
+        <createTable tableName="Customer">
+            <column name="id" type="NUMERIC">
+                <constraints primaryKey="true" primaryKeyName="PK_Customer_Id"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false" unique="false"/>
+            </column>
+            <column name="phone" type="VARCHAR(17)">
+                <constraints nullable="false" unique="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="12" author="vpetrovych">
+        <createTable tableName="OrderEntity">
+            <column name="id" type="NUMERIC">
+                <constraints primaryKey="true" primaryKeyName="PK_Order_Id"/>
+            </column>
+            <column name="addressFrom" type="VARCHAR(255)">
+                <constraints nullable="false" unique="false"/>
+            </column>
+            <column name="addressTo" type="VARCHAR(17)">
+                <constraints nullable="false" unique="false"/>
+            </column>
+            <column name="orderTime" type="java.sql.Timestamp">
+                <constraints nullable="false" unique="false"/>
+            </column>
+            <column name="driver" type="NUMERIC">
+                <constraints nullable="true" unique="false"/>
+            </column>
+            <column name="manager" type="NUMERIC">
+                <constraints nullable="false" unique="false"/>
+            </column>
+            <column name="customer" type="NUMERIC">
+                <constraints nullable="false" unique="false"/>
+            </column>
+            <column name="price" type="NUMERIC">
+                <constraints nullable="false" unique="false"/>
+            </column>
+            <column name="description" type="VARCHAR(255)">
+                <constraints nullable="true" unique="false"/>
+            </column>
+            <column name="status" type="VARCHAR(20)">
+                <constraints nullable="false" unique="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>

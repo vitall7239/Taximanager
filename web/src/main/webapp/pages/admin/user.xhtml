@@ -1,0 +1,190 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="../template/template_inner.xhtml">
+
+    <ui:define name="title">TaxiManager - User page</ui:define>
+
+    <ui:define name="sidebar">
+        <div class="sidebar">
+            <ul class="sidebar_menu">
+                <li>
+                    <h:form>
+                        <h:commandLink value="" action="orderList" title="Order list">
+                            <i class="fa fa-list"></i>
+                        </h:commandLink>
+                    </h:form>
+                </li>
+                <li>
+                    <h:form>
+                        <h:commandLink value="" action="userInfo" title="Users info">
+                            <i class="fa fa-user-circle"></i>
+                        </h:commandLink>
+                    </h:form>
+                </li>
+            </ul>
+        </div>
+    </ui:define>
+
+    <ui:define name="content">
+        <div class="user_wrap">
+            <h1>User information</h1>
+            <div class="user_form_wrap">
+                <h:form id="userForm">
+                    <p>
+                        <h:outputLabel for="userPhoneInput" value="Phone:"/>
+                        <h:inputText autocomplete="off" id="userPhoneInput" class="tel" value="#{adminEditUserBean.user.phone}" required="true"
+                                     requiredMessage="This field is required."  placeholder="+38 (___) ___-__-__">
+                            <f:validator validatorId="phone-validator" />
+                            <p:ajax update="@this" event="change" />
+                        </h:inputText>
+                        <h:message  class="error_message" for="userPhoneInput" id="userPhoneError" />
+                    </p>
+                    <p>
+                        <h:outputLabel for="userEmailInput" value="Email:"/>
+                        <h:inputText autocomplete="off" id="userEmailInput" value="#{adminEditUserBean.user.email}" required="true"
+                                     requiredMessage="This field is required." >
+                            <f:validator validatorId="email-validator" />
+                            <p:ajax update="@this" event="change" />
+                        </h:inputText>
+                        <h:message for="userEmailInput" class="error_message" id="userEmailError" />
+                    </p>
+                    <p>
+                        <h:outputLabel for="ageInput" value="Age:"/>
+                        <h:inputText autocomplete="off" id="ageInput" value="#{adminEditUserBean.user.age}" required="true" requiredMessage="This field is required.">
+                            <f:validator validatorId="age-validator" />
+                            <p:ajax update="@this" event="change" />
+                        </h:inputText>
+                        <h:message for="ageInput" class="error_message" id="ageError" />
+                    </p>
+                    <p>
+                        <h:outputLabel for="lastNameInput" value="Surname:"/>
+                        <h:inputText autocomplete="off" id="lastNameInput" value="#{adminEditUserBean.user.lastName}" required="true"
+                                     requiredMessage="This field is required.">
+                            <f:validator validatorId="user-name-validator" />
+                            <p:ajax update="@this" event="change" />
+                        </h:inputText>
+                        <h:message for="lastNameInput" class="error_message" id="lastNameError" />
+                    </p>
+                    <p>
+                        <h:outputLabel for="firstNameInput" value="Name:"/>
+                        <h:inputText autocomplete="off" id="firstNameInput" value="#{adminEditUserBean.user.firstName}" required="true"
+                                     requiredMessage="This field is required.">
+                            <f:validator validatorId="user-name-validator" />
+                            <p:ajax update="@this" event="change" />
+                        </h:inputText>
+                        <h:message for="firstNameInput" class="error_message" id="firstNameError" />
+                    </p>
+                    <p>
+                        <h:outputLabel for="fatherNameInput" value="Middle name"/>
+                        <h:inputText autocomplete="off" id="fatherNameInput" value="#{adminEditUserBean.user.fatherName}" required="true"
+                                     requiredMessage="This field is required.">
+                            <f:validator validatorId="user-name-validator" />
+                            <p:ajax update="@this" event="change" />
+                        </h:inputText>
+                        <h:message for="fatherNameInput" class="error_message" id="fatherNameError" />
+                    </p>
+                    <p>
+                        <h:outputLabel for="roleSelect" value="Role:"/>
+                        <h:selectOneMenu id="roleSelect" value="#{adminEditUserBean.role}">
+                            <f:selectItem itemValue = "ADMIN" itemLabel = "Admin" />
+                            <f:selectItem itemValue = "DRIVER" itemLabel = "Driver" />
+                            <f:selectItem itemValue = "MANAGER" itemLabel = "Phone operator" />
+                            <p:ajax update="@this" event="change"></p:ajax>
+                        </h:selectOneMenu>
+                    </p>
+                    <p>
+                        <h:outputLabel for="passwordInput" value="Change password:"/>
+                        <h:inputText autocomplete="off" id="passwordInput" value="#{adminEditUserBean.password}">
+                            <p:ajax update="@this" event="change" />
+                        </h:inputText>
+                        <h:message for="passwordInput" class="error_message" id="passwordError" />
+                    </p>
+                    <div class="clear"></div>
+                    <div class="link">
+                        <h:commandButton value="Save" class="button_link" action="saveUser">
+                            <p:ajax update="@this"/>
+                        </h:commandButton>
+                    </div>
+                </h:form>
+            </div>
+            <div class="car_form_wrap">
+                <p:panel id="carWrapper" autoUpdate="true">
+                    <p:panel id="car_link" rendered="#{!adminEditUserBean.showCarForm}">
+                        <div class="add_car_link">
+                            <h:form>
+                                <h:commandLink action="addCar" value="Add car information" class="button_link">
+                                    <p:ajax update="@this carWrapper" />
+                                </h:commandLink>
+                            </h:form>
+                        </div>
+                    </p:panel>
+                    <p:panel id="carForm" rendered="#{adminEditUserBean.showCarForm}">
+                        <div class="car_form">
+                            <h:form>
+                                <p>
+                                    <h:outputLabel for="markInput" value="Vehicle brand:"/>
+                                    <h:inputText autocomplete="off" id="markInput" value="#{adminEditUserBean.car.mark}" required="true" requiredMessage="This field is required.">
+                                        <p:ajax update="@this" event="change" />
+                                    </h:inputText>
+                                    <h:message for="markInput" class="error_message" id="markError" />
+                                </p>
+                                <p>
+                                    <h:outputLabel for="modelInput" value="Vehicle color:"/>
+                                    <h:inputText autocomplete="off" id="modelInput" value="#{adminEditUserBean.car.model}" required="true" requiredMessage="This field is required.">
+                                        <p:ajax update="@this" event="change" />
+                                    </h:inputText>
+                                    <h:message for="modelInput" class="error_message" id="modelError" />
+                                </p>
+                                <p>
+                                    <h:outputLabel for="yearInput" value="Vehicle manufactured year:"/>
+                                    <h:inputText autocomplete="off" id="yearInput" value="#{adminEditUserBean.car.year}" required="true" requiredMessage="This field is required.">
+                                        <p:ajax update="@this" event="change" />
+                                    </h:inputText>
+                                    <h:message for="yearInput" class="error_message" id="yearError" />
+                                </p>
+                                <p>
+                                    <h:outputLabel for="colorInput" value="Vehicle color:"/>
+                                    <h:inputText autocomplete="off" id="colorInput" value="#{adminEditUserBean.car.color}" required="true" requiredMessage="This field is required.">
+                                        <p:ajax update="@this carForm" event="change" />
+                                    </h:inputText>
+                                    <h:message for="colorInput" class="error_message" id="colorError" />
+                                </p>
+                                <p>
+                                    <h:outputLabel for="numberInput" value="Plate number:"/>
+                                    <h:inputText autocomplete="off" id="numberInput" value="#{adminEditUserBean.car.number}" required="true" requiredMessage="This field is required.">
+                                        <p:ajax update="@this" event="change" />
+                                    </h:inputText>
+                                    <h:message for="numberInput" class="error_message" id="numberError" />
+                                </p>
+                                <p>
+                                    <h:outputLabel for="driverNumberInput" value="Driver license number:"/>
+                                    <h:inputText autocomplete="off" id="driverNumberInput" value="#{adminEditUserBean.car.driverNumber}" required="true" requiredMessage="This field is required.">
+                                        <p:ajax update="@this" event="change" />
+                                    </h:inputText>
+                                    <h:message for="driverNumberInput" class="error_message" id="driverNumberError" />
+                                </p>
+                                <div class="clear"></div>
+                                <div class="link">
+                                    <h:commandButton value="Save" class="button_link" action="saveCar">
+                                        <p:ajax update="carWrapper" />
+                                    </h:commandButton>
+                                </div>
+                            </h:form>
+                        </div>
+                    </p:panel>
+                </p:panel>
+            </div>
+        </div>
+    </ui:define>
+
+    <ui:define name="popup">
+    </ui:define>
+
+</ui:composition>
+
+</html>

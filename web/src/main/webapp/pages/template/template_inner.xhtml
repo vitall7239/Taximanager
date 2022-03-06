@@ -1,0 +1,73 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui = "http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title><ui:insert name="title"/></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="/taximanager/css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="/taximanager/fnt/font.css"/>
+    <link rel="stylesheet" type="text/css" href="/taximanager/css/jquery.formstyler.full.css"/>
+    <script type="text/javascript" src="/taximanager/js/jquery-1.12.0.min.js"></script>
+    <script type="text/javascript" src="/taximanager/js/jquery.inputmask.bundle.js"></script>
+    <script type="text/javascript" src="/taximanager/js/inputmask/phone-my.js"></script>
+    <script type="text/javascript" src="/taximanager/js/jquery.validate.min.js"></script>
+    <script type="text/javascript" src="/taximanager/js/jquery.formstyler.min.js"></script>
+    <script type="text/javascript" src="/taximanager/js/scripts.js"></script>
+</h:head>
+<h:body class="inner">
+    <div id="site">
+
+        <ui:insert name="header" >
+            <ui:include src = "template_header_inner.xhtml" />
+        </ui:insert>
+
+        <ui:insert name="sidebar" >
+            <div class="sidebar">
+                <ul class="sidebar_menu">
+                    <li>
+                        <h:form>
+                            <h:commandLink value="" action="orderList" title="Order list">
+                                <i class="fa fa-list"></i>
+                            </h:commandLink>
+                        </h:form>
+                    </li>
+                    <li>
+                        <h:form>
+                            <h:commandLink value="" action="myList" title="My order list">
+                                <i class="fa fa-history"></i>
+                            </h:commandLink>
+                        </h:form>
+                    </li>
+                    <li>
+                        <h:form>
+                            <h:commandLink value="" action="userInfo" title="My info">
+                                <i class="fa fa-user-circle"></i>
+                            </h:commandLink>
+                        </h:form>
+                    </li>
+                </ul>
+            </div>
+        </ui:insert>
+
+        <div id="body">
+            <ui:insert name="content" >
+                <!--<ui:include src = "template_content.xhtml" />-->
+            </ui:insert>
+        </div>
+
+    </div>
+
+    <ui:insert name="footer" >
+        <ui:include src="template_footer.xhtml" />
+    </ui:insert>
+
+    <ui:insert name="popup" >
+    </ui:insert>
+
+</h:body>
+</html>

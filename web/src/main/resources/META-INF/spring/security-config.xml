@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<b:beans xmlns:b="http://www.springframework.org/schema/beans"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://www.springframework.org/schema/security"
+         xmlns:context="http://www.springframework.org/schema/context"
+         xsi:schemaLocation="http://www.springframework.org/schema/security
+        http://www.springframework.org/schema/security/spring-security.xsd
+        http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <context:component-scan base-package="org.vpetrovych.taximanager.service"/>
+
+    <b:bean id="userDetailsService" class="org.vpetrovych.taximanager.service.implementations.UserDetailsServiceImpl"/>
+    <b:bean id="passwordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
+
+    <authentication-manager alias="authenticationManager">
+        <authentication-provider user-service-ref="userDetailsService">
+            <password-encoder ref="passwordEncoder"/>
+        </authentication-provider>
+
+    </authentication-manager>
+
+    <http use-expressions="true">
+        <csrf disabled="true"/>
+
+        <intercept-url pattern="/pages/index.xhtml" access="permitAll" />
+        <intercept-url pattern="/pages/register.xhtml" access="permitAll" />
+        <intercept-url pattern="/pages/changePassword.xhtml" access="permitAll" />
+        <intercept-url pattern="/pages/accessDenied.xhtml" access="permitAll" />
+        <intercept-url pattern="/pages/admin/**" access="hasAuthority('ADMIN')" />
+        <intercept-url pattern="/pages/driver/**" access="hasAuthority('DRIVER')" />
+        <intercept-url pattern="/pages/manager/**" access="hasAuthority('MANAGER')" />
+        <intercept-url pattern="/pages/**"
+                                access="isAuthenticated()" />
+        <intercept-url pattern="/flows/login/**" access="permitAll" />
+        <intercept-url pattern="/flows/register/**" access="permitAll" />
+        <intercept-url pattern="/flows/admin/**" access="hasAuthority('ADMIN')" />
+        <intercept-url pattern="/flows/driver/**" access="hasAuthority('DRIVER')" />
+        <intercept-url pattern="/flows/manager/**" access="hasAuthority('MANAGER')" />
+
+
+        <form-login login-page="/flows/login"
+                    authentication-failure-url="/flows?error"
+                    username-parameter="phone" password-parameter="password" />
+        <logout logout-url="/logout" logout-success-url="/flows/login"/>
+        <access-denied-handler error-page="/pages/accessDenied.xhtml"/>
+    </http>
+</b:beans>

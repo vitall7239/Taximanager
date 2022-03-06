@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.springframework.org/schema/webflow
+                          http://www.springframework.org/schema/webflow/spring-webflow.xsd">
+
+    <on-start>
+        <evaluate expression="managerOrderBean" result="flowScope.managerOrderBean"></evaluate>
+        <evaluate expression="managerMyOrderBean" result="flowScope.managerMyOrderBean"></evaluate>
+        <evaluate expression="managerUser" result="flowScope.managerUser"></evaluate>
+    </on-start>
+
+    <view-state id="manager" view="/pages/manager/list.xhtml">
+        <on-entry>
+            <evaluate expression="managerOrderBean.init()" />
+        </on-entry>
+        <transition on="add">
+            <evaluate expression="managerOrderBean.addOrder()" />
+        </transition>
+        <transition on="cancelOrder">
+            <evaluate expression="managerOrderBean.cancelOrder()" />
+        </transition>
+        <transition on="saveOrder">
+            <evaluate expression="managerOrderBean.saveOrder()" />
+        </transition>
+        <transition on="editOrder">
+            <evaluate expression="managerOrderBean.editOrder( requestParameters.orderId )" />
+        </transition>
+        <transition on="deleteOrder">
+            <evaluate expression="managerOrderBean.deleteOrder( requestParameters.orderId )" />
+        </transition>
+        <transition on="refresh">
+            <evaluate expression="managerOrderBean.refresh()" />
+        </transition>
+        <transition on="orderList" />
+        <transition on="myList" to="myListFlow" />
+        <transition on="userInfo" to="userInfoFlow" />
+        <transition on="logout" to="logoutFlow"/>
+    </view-state>
+
+    <view-state id="myListFlow" view="/pages/manager/my_list.xhtml">
+        <on-entry>
+            <evaluate expression="managerMyOrderBean.init()"/>
+        </on-entry>
+        <transition on="cancelOrder">
+            <evaluate expression="managerMyOrderBean.cancelOrder()"></evaluate>
+        </transition>
+        <transition on="saveOrder">
+            <evaluate expression="managerMyOrderBean.saveOrder()"></evaluate>
+        </transition>
+        <transition on="editOrder">
+            <evaluate expression="managerMyOrderBean.editOrder( requestParameters.orderId )"></evaluate>
+        </transition>
+        <transition on="deleteOrder">
+            <evaluate expression="managerMyOrderBean.deleteOrder( requestParameters.orderId )"></evaluate>
+        </transition>
+        <transition on="refresh">
+            <evaluate expression="managerMyOrderBean.refresh()" />
+        </transition>
+        <transition on="orderList" to="manager" />
+        <transition on="myList" />
+        <transition on="userInfo" to="userInfoFlow" />
+        <transition on="logout" to="logoutFlow"/>
+    </view-state>
+
+    <view-state id="userInfoFlow" view="/pages/manager/user.xhtml">
+        <on-entry>
+            <evaluate expression="managerUser.init()"/>
+        </on-entry>
+        <transition on="saveUser">
+            <evaluate expression="managerUser.saveUser()"></evaluate>
+        </transition>
+        <transition on="orderList" to="manager" />
+        <transition on="myList" to="myListFlow" />
+        <transition on="userInfo" />
+        <transition on="logout" to="logoutFlow"/>
+    </view-state>
+
+    <end-state id="logoutFlow" view="externalRedirect:contextRelative:/logout"/>
+
+</flow>

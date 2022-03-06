@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<faces-config
+        xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee
+        http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_3.xsd"
+        version="2.1">
+    <!-- JSF configuration here. -->
+    <application>
+        <locale-config>
+            <default-locale>en</default-locale>
+        </locale-config>
+        <el-resolver>org.springframework.web.jsf.el.SpringBeanFacesELResolver</el-resolver>
+    </application>
+
+    <validator>
+        <validator-id>email-validator</validator-id>
+        <validator-class>com.od.eisgroup.interviewer.ui.validator.EmailValidator</validator-class>
+    </validator>
+    <validator>
+        <validator-id>password-validator</validator-id>
+        <validator-class>com.od.eisgroup.interviewer.ui.validator.PasswordValidator</validator-class>
+    </validator>
+    <validator>
+        <validator-id>confirm-password-validator</validator-id>
+        <validator-class>com.od.eisgroup.interviewer.ui.validator.ConfirmPasswordValidator</validator-class>
+    </validator>
+    <validator>
+        <validator-id>user-name-validator</validator-id>
+        <validator-class>com.od.eisgroup.interviewer.ui.validator.UserNameValidator</validator-class>
+    </validator>
+</faces-config>

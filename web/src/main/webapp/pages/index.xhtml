@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<ui:composition template="template/template.xhtml">
+
+    <ui:define name = "title">TaxiManager - Enter</ui:define>
+
+    <ui:define name="content">
+        <div class="welcome_wrap">
+            <div class="welcome_block">
+                <div class="text">Welcome to TaxiManager</div>
+                <div class="form">
+                    <h:form id="loginForm">
+                        <p>
+                            <h:outputLabel for="phoneInput" value="Your phone:"/>
+                            <h:inputText autocomplete="off" id="phoneInput" class="tel" value="#{loginBean.phone}" required="true"
+                                         requiredMessage="This field is required."  placeholder="+38(___)___-__-__">
+                                <f:validator validatorId="phone-validator" />
+                            </h:inputText>
+                            <h:message  class="error_message" for="phoneInput" id="phoneError" />
+                        </p>
+                        <p>
+                            <h:outputLabel for="loginPass" value="Your password:"/>
+                            <h:inputSecret autocomplete="off" id="loginPass" value="#{loginBean.password}"
+                                           required="true" requiredMessage="This field is required."/>
+                            <h:message class="error_message" for="loginPass" id="passwordError" />
+                        </p>
+                        <h:commandButton value="Enter" action="#{loginBean.login}" ajax="false"/>
+                    </h:form>
+                </div>
+                <div class="other_link">
+                    <h:form>
+                        <h:commandLink value="Register" action="register" class="button_link forgot" />
+                    </h:form>
+                    <!--<h:link outcome="changePassword.xhtml" value="Forgot your password?" />-->
+                </div>
+            </div>
+        </div>
+    </ui:define>
+
+</ui:composition>
+
+</html>

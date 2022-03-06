@@ -1,0 +1,52 @@
+package com.od.eisgroup.interviewer.dao.implementations;
+
+import com.od.eisgroup.interviewer.dao.interfaces.UserDao;
+import com.od.eisgroup.interviewer.domain.entity.User;
+import org.springframework.stereotype.Repository;
+
+<<<<<<< local
+/**
+ * <p>
+ *     This class is implementation class of {@link com.od.eisgroup.interviewer.dao.interfaces.UserDao}
+ * </p>
+ *
+ * @author <a href='mailto:anatoly.zlatov@gmail.com'>Anatoly Zlatov</a>
+ *
+ * @since 1.0
+ */
+@Repository
+public class UserDaoImpl extends GenericDaoImpl<User, Long> implements UserDao {
+
+    public UserDaoImpl() {
+        super(User.class);
+=======
+import javax.persistence.NonUniqueResultException;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+
+@Repository
+public class UserDaoImpl extends GenericDaoImpl<User, Long> implements UserDao {
+
+    public UserDaoImpl() {
+        super(User.class);
+    }
+
+
+    @Override
+    public Optional<User> findUserByEmail(String email) {
+        Objects.requireNonNull(email);
+        List<User> userList = getEntityManager()
+                .createQuery("select u from " + getClazz().getSimpleName() + " u where u.email =:email", getClazz())
+                .setParameter("email", email)
+                .getResultList();
+
+        if (userList.isEmpty()) {
+            return Optional.empty();
+        } else if (userList.size() == 1) {
+            return Optional.of(userList.get(0));
+        }
+        throw new NonUniqueResultException();
+>>>>>>> other
+    }
+}

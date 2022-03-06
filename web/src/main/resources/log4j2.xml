@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Configuration>
+    <Appenders>
+        <Console name="console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS}{UTC} UTC | %level | %thread | %logger - %m%n"/>
+        </Console>
+
+        <RollingFile name="file" fileName="${catalina.home}/logs/eis-quiz.log"
+                     filePattern="logs/app.%d{dd-MM-yyyy}.log">
+            <PatternLayout>
+                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS}{UTC} UTC | %level | %thread | %logger - %m%n</pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+            </Policies>
+            <DefaultRolloverStrategy max="30"/>
+        </RollingFile>
+    </Appenders>
+
+    <Loggers>
+        <Root level="DEBUG">
+            <appender-ref ref="console"/>
+            <appender-ref ref="file"/>
+        </Root>
+        <logger name="com.od.eisgroup.interviewer.ui.EditInterviewBean" level="ERROR" additivity="false">
+            <appender-ref ref="file"/>
+        </logger>
+    </Loggers>
+</Configuration>

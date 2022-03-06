@@ -1,0 +1,179 @@
+@charset "utf-8";
+/* CSS Document */
+@keyframes dot_anim{
+	from, 50%, to{ opacity:0}
+	25%{ opacity:1}
+}
+*{outline:none !important; box-sizing:border-box;}
+article, aside, footer, header, nav, section {display: block}
+a img{border:0px;}
+label{font-size:14px; line-height:20px;}
+	label span{color:#DC4D63}
+input[type='text'],input[type='email'],input[type='tel'],input[type='password']{width:100%; height:50px; border:2px solid #000; border-radius:25px; font-size:20px; line-height:30px; padding:8px 20px; background:#FFDD00; color:#000; box-shadow:none !important; text-shadow:none !important; }
+input[type='text']:focus,input[type='email']:focus,input[type='tel']:focus,input[type='password']:focus{ box-shadow:none !important;}
+.ui-state-error{ background:rgba(238,175,175,0.6) !important; border:1px solid #B0969E !important;}
+input::-webkit-input-placeholder{color:#444;}
+input::-moz-placeholder{color:#444;}
+input:-moz-placeholder{color:#444;}
+input:-ms-input-placeholder{color:#444;}
+textarea{ overflow:auto; resize:none; width:100%; height:170px; border:2px solid #000; border-radius:25px; font-size:20px; line-height:30px; padding:8px 20px; background:#FFDD00; color:#000; box-shadow:none !important; text-shadow:none !important;}
+textarea:focus{ box-shadow:none !important;}
+textarea::-webkit-input-placeholder{color:#666;}
+textarea::-moz-placeholder{color:#666;}
+textarea:-moz-placeholder{color:#666;}
+textarea:-ms-input-placeholder{color:#666;}
+button, input[type='submit'], input[type='button']{ display:inline-block; vertical-align:top; border:0px solid #D7D7D8; border-radius:25px; background:#000; font-size:24px; line-height:30px; font-weight:700; text-align:center; padding:9px 20px; color:#FFF; min-width:140px; cursor:pointer; width:100%; margin:0px 0px 10px; text-decoration:none !important;}
+	button:hover, input[type='submit']:hover, input[type='button']:hover{ background:#333;}
+.button_link{ display:inline-block; vertical-align:top; border:2px solid #000; border-radius:25px; background:transparent; font-size:24px; line-height:30px; font-weight:700; text-align:center; padding:8px 20px; color:#000; min-width:140px; cursor:pointer; width:100%; margin:0px 0px 10px; text-decoration:none}
+	.button_link:hover{ text-decoration:underline;}
+
+p{margin:0px 0px 20px;}
+h1{margin:0px 0px 20px; font-size:40px; line-height:50px; text-align:center; padding:5px 0px 20px; font-weight:700; background:url(/taximanager/img/bg.png) repeat-x bottom center; background-size:auto 10px;}
+h2{margin:0px 0px 15px; font-size:18px; line-height:24px; font-weight:700; border-bottom:1px dotted #D7D7D8}
+table{width:100%; border:4px solid #000; border-collapse:collapse;}
+	table thead th{ background:#000; padding:5px 10px 9px; font-weight:700; text-align:left; font-weight:700; color:#FFDD00;}
+	table tbody td{ padding:5px 10px; border-bottom:1px solid #000; vertical-align:middle;}
+	table tbody tr:nth-child(2n) td{ background:#FF9900}
+.clear{clear:both;}
+.error_message{font-size:16px; line-height:20px; color:#8E0200; font-style:italic; margin:10px 0px; padding:0px 0px 0px 15px;}
+body .ui-panel{border:0px; padding:0px; border-radius:0px; margin:0px 0px 0px;}
+	body .ui-panel .ui-panel-content{padding:0px;}
+a{color:#35559A; text-decoration:none;}
+a:hover{text-decoration:underline;}
+.ui-widget-content{ background:transparent !important;}
+html, body, #site {height:100%; width:100%; padding:0px; margin:0px; font:20px 'Segoe UI', serif; line-height:24px; background:#FFDD00; color:#000;}
+#site {height:auto; min-height:100%; min-width:760px; }
+	#head{ position:fixed; top:0px; left:0px; width:100%; background:#333; color:#fff; padding:10px 15px; z-index:100;}
+		.logo_bl{float:left; font-size:40px; line-height:30px; font-weight:700; position:absolute; top:10px; left:15px;}
+			.logo_bl a, .logo_bl a:hover{color:#666; text-decoration:none;}
+		.user_menu{float:right; font-size:0px; position:absolute; top:0px; right:15px;}
+			.user_menu a{ display:inline-block; width:60px; height:60px; text-align:center; vertical-align:top; text-decoration:none; font-size:46px; line-height:60px; padding:0px; margin:0px; color:#000; border:0px solid #C4C6C7; color:#fc0; cursor:pointer;}
+			.user_menu a:hover{ color:#fff;}
+			.user_menu a i{width:60px; height:60px; margin:6px 0px 0px;}
+		.date_wrap{ text-align:center; font-size:26px; line-height:40px; color:#fff;}
+			.date_wrap .day{margin-right:10px;}
+			.date_wrap .hour{margin-left:10px;}
+			.date_wrap .dot{ animation:dot_anim 1s infinite 0s; line-height:36px; display:inline-block; vertical-align:top; margin-right:2px; margin-left:3px}
+	.sidebar{ position:fixed; top:60px; left:0px; width:60px; bottom:0px; background:#333; z-index:100}
+		.sidebar ul{margin:0px; padding:0px; list-style:none;}
+			.sidebar ul li{border-top:1px solid #ffcc00;}
+				.sidebar ul li a{width:60px; height:60px; display:block; font-size:40px; line-height:60px; text-align:center; color:#fc0; text-decoration:none;}
+				.sidebar ul li a:hover{color:#fff;}
+		        .sidebar ul li a i{width:40px; height:40px; margin:10px 0px 0px;}
+			
+	#body {padding:60px 15px 40px;}
+	.inner #body{padding:60px 15px 40px 75px;}
+		.welcome_wrap{ background:url(/taximanager/img/bg.png) repeat-x 0px  center; padding:30px 0px;}
+			.welcome_block{margin:0px auto 0px; border:5px solid #000; border-radius:20px; max-width:500px; padding:20px 25px; background:#ff9900;}
+				.welcome_block .text{font-size:30px; line-height:36px; text-align:center; font-weight:700;}
+				.welcome_block .form{margin:20px 0px 0px;}
+				form p{margin:0px 0px 15px;}
+				form label{font-size:20px; line-height:24px; margin:0px 0px 10px; display:block;}
+		.order_list_wrap{}
+			.order_list_wrap table{font-size:30px; line-height:40px;}	
+				.order_list_wrap table td{ color:#000;}
+				.order_list_wrap table .links{width:120px; text-align:right;}
+				.order_list_wrap table .links a{width:40px; height:40px; display:inline-block; vertical-align:top; border-radius:5px; background:#000; text-align:center; color:#ffcc00;}
+				.order_list_wrap table .links a:hover{ color:#fff;}
+				.order_list_wrap table .links a i{margin:5px 0px 0px;}
+				.red{color:#f00;}
+				.green{color:#009D00;}
+				.blue{color:#2828DB;}
+		.filter_block{float:left; width:49%; margin:0px 0px 20px;}
+			.manager_filter_bl{width:32%;}
+			.filter_block .sel_bl{padding:0px 0px 0px 160px; position:relative;}
+				.filter_block .sel_bl label{ position:absolute; top:13px; left:0px;}
+		.sort_bl{ margin:0px 0px 20px;}
+			.manager_sort_bl{width:66%; float:left; margin-left:0%;}
+			.filter_block h3, .sort_bl h3{margin:0px 0px 10px;}
+		.manager_menu{float:right; width:32%; padding:34px 0px 0px;}
+			.manager_menu .button_link:hover{ background:#000; color:#FFDD00; text-decoration:none}
+		.order_list .refresh{display:inline-block; float:right; width:40px; height:40px; text-align:center; color:#ffCC00}
+			.order_list .refresh:hover{color:#fff;}
+			.order_list .refresh i{ display:inline-block; width:40px; height:40px; margin:0px auto; font-size:40px;}
+		.user_wrap{}
+        			.user_wrap .user_form_wrap{ margin:0px -15px;}
+        				.user_wrap .user_form_wrap p{width:33.33%; float:left; padding:0px 15px; margin:0px 0px 20px;}
+        				.user_wrap .user_form_wrap .link{padding:0px 15px; clear:both; margin:10px 0px 0px;}
+        			.user_wrap .car_form_wrap{ background:url(../img/bg.png) repeat-x top center; background-size:auto 10px; margin:20px 0px 0px; padding:40px 0px 0px;}
+        				.user_wrap .car_form_wrap .add_car_link{}
+        					.user_wrap .car_form_wrap .add_car_link a:hover{ background:#000; color:#fff; text-decoration:none;}
+        				.user_wrap .car_form_wrap .car_form{margin:0px -15px;}
+        					.user_wrap .car_form_wrap .car_form p{width:33.33%; float:left; padding:0px 15px;}
+        					.user_wrap .car_form_wrap .car_form .link{margin:10px 0px 0px; padding:0px 15px;}
+		.search_bl{margin:20px -15px 20px; }
+		    .search_bl h3{padding:0px 15px; margin:0px 0px 10px;}
+		    .search_bl .search_inp{width:40%; padding:0px 15px; float:left;}
+		    .search_bl .search_sel{width:40%; padding:0px 15px; float:left;}
+		    .search_bl .search_but{width:20%; padding:0px 15px; float:left;}
+		.admin_sort_bl{margin:20px -15px 20px;}
+		    .admin_sort_bl h3{padding:0px 15px;}
+		    .admin_sort_bl .sel_bl{float:left; width:50%; padding:0px 15px;}
+		
+		.pagination{margin:20px 0px 0px; padding:0px; text-align:left;}
+			.pagination a.current, .pagination a.current:hover{ display:inline-block; vertical-align:top; margin:0px 5px 5px 0px; width:30px; height:30px; border:1px solid #325797; border-radius:3px; background:#325797; font-size:18px; line-height:28px; padding:0px; text-align:center; color:#fff; cursor:pointer; text-decoration:none;}
+			.pagination a{ display:inline-block; vertical-align:top; margin:0px 5px 5px 0px; width:30px; height:30px; border:1px solid #D7D7D8; border-radius:3px; background:#F5F5F5; font-size:18px; line-height:28px; padding:0px; text-align:center; color:#000; cursor:pointer; text-decoration:none;}
+			.pagination a:hover{background:#E7E7E7}
+		.quiz_form_wrapper .ui-panel{margin:0px 0px 30px;}
+		.quiz_title_bl, .quest_bl{margin:0px 0px 15px;}
+			.quiz_title_bl label, .quest_bl label{display:inline-block; vertical-align:top; width:100px; margin:10px 10px 0px 0px;}
+			.quiz_title_bl .input_bl, .quest_bl .input_bl{display:inline-block; vertical-align:top; width:650px;}
+		.answrs_wrap{margin:0px 0px 20px;}
+			.answrs_wrap .name{font-size:14px; line-height:20px; margin:0px 0px 10px;}
+			.answrs_wrap .answer_bl{margin:0px 0px 10px;}
+				.answrs_wrap .answer_bl label{display:inline-block; vertical-align:top; width:35px; margin:10px 0px 0px 0px;}
+				.answrs_wrap .answer_bl .input_bl{display:inline-block; vertical-align:top; width:725px;}
+				.answrs_wrap .answer_bl .correct_bl{ display:inline-block; vertical-align:top; margin:0px 30px 0px 20px; padding:10px 0px 0px;}
+				    .answrs_wrap .answer_bl .correct_bl label{width:auto; margin:0px;}
+				.answrs_wrap .answer_bl .remove_bl{ display:inline-block; vertical-align:top;}
+					.answrs_wrap .answer_bl .remove_bl input{padding:4px 20px;}
+			.add_new_answer{margin:0px 0px 10px; padding-left:40px;}
+				.add_new_answer input{padding:4px 20px;}
+            .add_quiz_link{margin:15px 0px 0px;}
+        	    .add_quiz_link input{padding:5px 30px;}
+			.pass_quiz_link{margin:15px 0px 0px;}
+
+        .enter_form{max-width:600px; background:#E9ECED; padding:30px; margin:30px auto 0px; }
+		.enter_big_form{background: #E9ECED; padding: 30px; margin: 30px auto 0px;}
+        .enter_big_form_profile{max-width: 90%; background: white; padding: 30px; margin: 10px auto 0px;}
+        .formTable{border:0px; padding:0px;}
+			.formTable tbody td, .formTable thead th{padding:0px 0px 15px; width:auto; vertical-align:top}
+			.formTable tbody tr:nth-child(2n) td{ background:transparent}
+			.formTable tbody td label{ margin:10px 0px 0px; display:block}
+		.formButtonTable{margin:10px 0px 0px; text-align:center;}
+			.formButtonTable tbody td{padding:0px;}
+.profile {font-family: "Segoe UI", serif !important;}
+.profile h1 { margin-left: 30px; width: 90%}
+.profile h2 { margin-left: 30px; width: 90%}
+.profile .profileButton {margin-left: 20px;background: rgba(45, 67, 127, 0.82) !important; border: none; border-radius: 4px;  color: #ffffff !important; ;text-align: center; text-decoration: none;
+    font-size: 16px; cursor: pointer;}
+.profile .profileTable { width:auto; /*position: center;*/ padding:5px 10px; border-color: white; background: #ffffff;  color: black; margin: 20px;}
+.profile .profileTable .head {padding:5px 10px; font-weight:700; text-align:left; border-color: white;}
+.profile .profileTable .value { background: white; padding:5px 10px; border-color: white;}
+.profile .profilePanel { font-size: 12px; border-bottom-style: none; width: 40%; margin: 20px; /*position: center*/}
+.profile .profileForm { width :90%; border-style: none; border : 0px !important; /*position: center*/}
+.profile .profile_big_form{background: #ffffff; /*position: center;*/}
+.profile .profile.profileText {font-size: 12px; color: #000000; width: 50px}
+.profile .profileInput {background-color: #e6e821 !important; border: none; }
+.profile .profileLink {pointer-events: none; cursor: default; }
+.profile .profileTextResult {font-size: 18px;  color: #61c200!important;}
+.profile .profileValue {font-size: 18px; color: #000000; width: 50px;}
+.profile .profilePanelGoals {width: 50% !important; border-color: white; margin: 20px; font-family: "Segoe UI", serif; /*position: center*/}
+
+#footer {position:relative; margin-top:-40px; height:40px; clear:both; border-top:1px solid #000; text-align:center; padding:5px 0px 0px; min-width:760px; }
+	#footer button, #footer input[type='submit'], #footer input[type='button']{margin:0px 15px;}
+		#footer form a{ display:inline-block; vertical-align:top; border:1px solid #D7D7D8; border-radius:3px; background:#F5F5F5; font-size:18px; line-height:30px; padding:9px 20px; color:#000; min-width:140px; cursor:pointer; margin:0px 15px;}
+		#footer form a:hover{ background:#E7E7E7}
+	.copyright{ text-align:center;}
+
+.popup_bg{position:absolute; top:0px; left:0px; width:100%; height:100%; background:rgba(0,0,0,0.56); z-index:9999; }
+.popup_wrapper{position:absolute; top:0px; left:0px; width:100%; margin:0px; padding:0px; list-style:none; z-index:9999;}
+	.popup_wrapper>li{ position:absolute; top:10px; left:50%; width:500px; padding:0px; border:5px solid #000; border-radius:20px; background:#FFDD00; margin-left:-250px; padding:0px;}
+    	.popup_wrapper .popup_inner{padding:20px 25px 10px;}
+		.popup_wrapper .popup_close{ position:absolute; width:40px; height:40px; font-size:40px; line-height:40px; color:#000; top:15px; right:10px; cursor:pointer;}
+		.popup_wrapper h3{margin:0px 0px 10px; font-size:26px; line-height:30px;}
+		.popup_wrapper .info_bl{margin:15px 0px 0px;}
+			.popup_wrapper .info_bl .info{margin:0px 0px 10px; font-size:22px; line-height:30px; font-weight:700;}
+			.popup_wrapper .info_bl .info .label{font-size:16px; line-height:20px; font-style:italic; font-weight:400;}
+		.popup_wrapper .button_link:hover{ background:#000; color:#FFDD00; text-decoration:none}
+		.popup_wrapper p .info{margin:0px 10px 0px 0px;}

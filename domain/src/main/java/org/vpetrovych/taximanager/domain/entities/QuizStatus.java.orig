@@ -1,0 +1,7 @@
+package com.od.eisgroup.interviewer.domain.entity;
+
+import java.io.Serializable;
+
+public enum QuizStatus implements Serializable {
+    DRAFT, PUBLIC, HIDDEN
+}

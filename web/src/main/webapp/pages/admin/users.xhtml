@@ -1,0 +1,143 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="../template/template_inner.xhtml">
+
+    <ui:define name="title">TaxiManager - Users list</ui:define>
+
+    <ui:define name="sidebar">
+        <div class="sidebar">
+            <ul class="sidebar_menu">
+                <li>
+                    <h:form>
+                        <h:commandLink value="" action="orderList" title="Order list">
+                            <i class="fa fa-list"></i>
+                        </h:commandLink>
+                    </h:form>
+                </li>
+                <li>
+                    <h:form>
+                        <h:commandLink value="" action="userInfo" title="Users info">
+                            <i class="fa fa-user-circle"></i>
+                        </h:commandLink>
+                    </h:form>
+                </li>
+            </ul>
+        </div>
+    </ui:define>
+
+    <ui:define name="content">
+        <div class="order_list_wrap">
+            <h1>Order list</h1>
+            <div class="search_bl">
+                <h3>Search</h3>
+                <h:form>
+                    <div class="search_inp">
+                        <p:inputText autocomplete="off" id="searchInput" value="#{adminUsersBean.searchText}">
+                            <p:ajax update="@this"></p:ajax>
+                        </p:inputText>
+                        <p:watermark for="searchInput" value="Search text"/>
+                    </div>
+                    <div class="search_sel">
+                        <h:selectOneMenu value="#{adminUsersBean.searchSelect}">
+                            <f:selectItem itemValue = "firstName" itemLabel = "Name" />
+                            <f:selectItem itemValue = "lastName" itemLabel = "Surname" />
+                            <f:selectItem itemValue = "fatherName" itemLabel = "Middle name" />
+                            <f:selectItem itemValue = "phone" itemLabel = "Phone" />
+                            <f:selectItem itemValue = "email" itemLabel = "Email" />
+                            <f:selectItem itemValue = "age" itemLabel = "Age" />
+                            <f:selectItem itemValue = "mark" itemLabel = "Vehicle brand" />
+                            <f:selectItem itemValue = "model" itemLabel = "Vehicle model" />
+                            <f:selectItem itemValue = "year" itemLabel = "Vehicle manufactured year" />
+                            <f:selectItem itemValue = "color" itemLabel = "Vehicle color" />
+                            <f:selectItem itemValue = "number" itemLabel = "Plate number" />
+                            <f:selectItem itemValue = "driverNumber" itemLabel = "Drive license number" />
+                            <p:ajax update="orderTablePanel" event="change"></p:ajax>
+                        </h:selectOneMenu>
+                    </div>
+                    <div class="search_but">
+                        <h:commandButton type="submit" value="Search" action="search" class="sub button_link">
+                            <p:ajax update="orderTablePanel"></p:ajax>
+                        </h:commandButton>
+                    </div>
+                    <div class="clear"></div>
+                </h:form>
+            </div>
+            <div class="sort_bl admin_sort_bl">
+                <h3>Sort</h3>
+                <div class="sel_bl">
+                    <h:form>
+                        <h:selectOneMenu value="#{adminUsersBean.sort}">
+                            <f:selectItem itemValue = "name.asc" itemLabel = "Ascending alphabetically" />
+                            <f:selectItem itemValue = "name.desc" itemLabel = "Descending alphabetically" />
+                            <p:ajax update="orderTablePanel" event="change"></p:ajax>
+                        </h:selectOneMenu>
+                    </h:form>
+                </div>
+                <div class="sel_bl">
+                    <h:form>
+                        <h:selectOneMenu value="#{adminUsersBean.role}">
+                            <f:selectItem itemValue = "all" itemLabel = "--Type of user--" />
+                            <f:selectItem itemValue = "ADMIN" itemLabel = "Admin" />
+                            <f:selectItem itemValue = "DRIVER" itemLabel = "Driver" />
+                            <f:selectItem itemValue = "MANAGER" itemLabel = "Manager" />
+                            <p:ajax update="orderTablePanel" event="change"></p:ajax>
+                        </h:selectOneMenu>
+                    </h:form>
+                </div>
+                <div class="clear"></div>
+            </div>
+            <p:panel  id="orderTablePanel">
+                <p:dataTable value="#{adminUsersBean.users}" var="user" paginator="true" rows="10" paginatorPosition="bottom"
+                             paginatorTemplate="{PreviousPageLink} {PageLinks} {NextPageLink}">
+                    <p:column>
+                        <f:facet name = "header">Surname Name</f:facet>
+                        #{user.lastName} #{user.firstName} #{user.fatherName}
+                    </p:column>
+                    <p:column>
+                        <f:facet name = "header">Phone</f:facet>
+                        <h:outputText value="#{user.phone}"></h:outputText>
+                    </p:column>
+                    <p:column>
+                        <f:facet name = "header">Role</f:facet>
+                        <p:panel rendered="#{user.role.name.equals('ADMIN')}">
+                            Admin
+                        </p:panel>
+                        <p:panel rendered="#{user.role.name.equals('DRIVER')}">
+                            Driver
+                        </p:panel>
+                        <p:panel rendered="#{user.role.name.equals('MANAGER')}">
+                            Phone operator
+                        </p:panel>
+                    </p:column>
+                    <p:column>
+                        <f:facet name = "header">
+                            <h:form>
+                                <h:commandLink value="" action="refresh" class="refresh">
+                                    <i class="fa fa-refresh"></i>
+                                    <p:ajax update="orderTablePanel"></p:ajax>
+                                </h:commandLink>
+                            </h:form>
+                        </f:facet>
+                        <h:form>
+                            <h:commandLink value="" action="editUser">
+                                <i class="fa fa-info-circle"></i>
+                                <f:param name="userId" value="#{user.id}" />
+                            </h:commandLink>
+                        </h:form>
+                    </p:column>
+                </p:dataTable>
+            </p:panel >
+        </div>
+    </ui:define>
+
+    <ui:define name="popup">
+    </ui:define>
+
+</ui:composition>
+
+</html>

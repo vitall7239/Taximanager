@@ -1,0 +1,22 @@
+package com.od.eisgroup.interviewer.dao.interfaces;
+
+import com.od.eisgroup.interviewer.domain.entity.User;
+
+<<<<<<< local
+/**
+ * <p>
+ *     This class is DAO interface for entity {@link com.od.eisgroup.interviewer.domain.entity.User}.
+ * </p>
+ *
+ * @author <a href='mailto:anatoly.zlatov@gmail.com'>Anatoly Zlatov</a>
+ *
+ * @since 1.0
+ */
+public interface UserDao extends GenericDao<User, Long> {
+=======
+import java.util.Optional;
+
+public interface UserDao extends GenericDao<User, Long> {
+    Optional<User> findUserByEmail(String email);
+>>>>>>> other
+}

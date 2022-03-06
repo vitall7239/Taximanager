@@ -1,0 +1,30 @@
+package com.od.eisgroup.interviewer.service.interfaces;
+
+import com.od.eisgroup.interviewer.domain.dto.UserDetailsDto;
+import com.od.eisgroup.interviewer.domain.dto.UserDto;
+import com.od.eisgroup.interviewer.domain.dto.UserInfoDto;
+import com.od.eisgroup.interviewer.domain.dto.UserSearchDto;
+import com.od.eisgroup.interviewer.domain.entity.User;
+import org.springframework.security.core.AuthenticationException;
+
+import java.util.List;
+import java.util.Optional;
+
+public interface UserService {
+
+    Optional<User> findUserByEmail(String email);
+
+    void saveUser(UserDetailsDto userDetailsDto);
+
+    void changePassword(String email, String oldPassword, String newPassword) throws AuthenticationException;
+
+    void register(UserDetailsDto userDetailsDto) throws AuthenticationException;
+
+    void login(String email, String password);
+
+    void addUser(UserDto userDto);
+
+    void deleteUser(Long userId);
+
+    List<UserInfoDto> findUserInfo(UserSearchDto userSearchDto, int page, int size);
+}

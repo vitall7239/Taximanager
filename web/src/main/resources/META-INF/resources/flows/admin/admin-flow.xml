@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.springframework.org/schema/webflow
+                          http://www.springframework.org/schema/webflow/spring-webflow.xsd">
+
+    <on-start>
+        <evaluate expression="adminOrderBean" result="flowScope.adminOrderBean"></evaluate>
+        <evaluate expression="adminUsersBean" result="flowScope.adminUsersBean"></evaluate>
+        <evaluate expression="adminEditUserBean" result="flowScope.adminEditUserBean"></evaluate>
+    </on-start>
+
+    <view-state id="admin" view="/pages/admin/orders.xhtml">
+        <on-entry>
+            <evaluate expression="adminOrderBean.init()" />
+        </on-entry>
+        <transition on="add">
+            <evaluate expression="adminOrderBean.addOrder()" />
+        </transition>
+        <transition on="cancelOrder">
+            <evaluate expression="adminOrderBean.cancelOrder()" />
+        </transition>
+        <transition on="saveOrder">
+            <evaluate expression="adminOrderBean.saveOrder()" />
+        </transition>
+        <transition on="editOrder">
+            <evaluate expression="adminOrderBean.editOrder( requestParameters.orderId )" />
+        </transition>
+        <transition on="deleteOrder">
+            <evaluate expression="adminOrderBean.deleteOrder( requestParameters.orderId )" />
+        </transition>
+        <transition on="refresh">
+            <evaluate expression="adminOrderBean.refresh()" />
+        </transition>
+        <transition on="orderList" />
+        <transition on="userInfo" to="userInfoFlow" />
+        <transition on="logout" to="logoutFlow"/>
+    </view-state>
+
+    <view-state id="userInfoFlow" view="/pages/admin/users.xhtml">
+        <on-entry>
+            <evaluate expression="adminUsersBean.init()" />
+        </on-entry>
+        <transition on="search">
+            <evaluate expression="adminUsersBean.search()" />
+        </transition>
+        <transition on="editUser" to="userEditFlow" />
+        <transition on="refresh">
+            <evaluate expression="adminUsersBean.refresh()" />
+        </transition>
+        <transition on="orderList" to="admin" />
+        <transition on="userInfo" />
+        <transition on="logout" to="logoutFlow"/>
+    </view-state>
+
+    <view-state id="userEditFlow" view="/pages/admin/user.xhtml">
+        <on-entry>
+            <evaluate expression="adminEditUserBean.init( requestParameters.userId )"/>
+        </on-entry>
+        <transition on="saveUser">
+            <evaluate expression="adminEditUserBean.saveUser()"></evaluate>
+        </transition>
+        <transition on="addCar">
+            <evaluate expression="adminEditUserBean.addCar()"></evaluate>
+        </transition>
+        <transition on="saveCar">
+            <evaluate expression="adminEditUserBean.saveCar()"></evaluate>
+        </transition>
+        <transition on="orderList" to="admin" />
+        <transition on="userInfo" to="userInfoFlow" />
+        <transition on="logout" to="logoutFlow"/>
+    </view-state>
+
+    <end-state id="logoutFlow" view="externalRedirect:contextRelative:/logout"/>
+
+</flow>

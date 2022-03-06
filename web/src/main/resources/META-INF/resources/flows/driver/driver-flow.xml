@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.springframework.org/schema/webflow
+                          http://www.springframework.org/schema/webflow/spring-webflow.xsd">
+
+    <on-start>
+        <evaluate expression="driverOrderBean" result="flowScope.driverOrderBean"></evaluate>
+        <evaluate expression="driverMyOrderBean" result="flowScope.driverMyOrderBean"></evaluate>
+        <evaluate expression="driverUser" result="flowScope.driverUser"></evaluate>
+    </on-start>
+
+    <view-state id="driver" view="/pages/driver/list.xhtml">
+        <on-entry>
+            <evaluate expression="driverOrderBean.init()" />
+        </on-entry>
+        <transition on="cancelOrder">
+            <evaluate expression="driverOrderBean.cancelOrder()" />
+        </transition>
+        <transition on="viewOrder">
+            <evaluate expression="driverOrderBean.viewOrder( requestParameters.orderId )" />
+        </transition>
+        <transition on="acceptOrder">
+            <evaluate expression="driverOrderBean.acceptOrder()" />
+        </transition>
+        <transition on="doneOrder">
+            <evaluate expression="driverOrderBean.doneOrder()" />
+        </transition>
+        <transition on="returnOrder">
+            <evaluate expression="driverOrderBean.returnOrder()" />
+        </transition>
+        <transition on="doCancelOrder">
+            <evaluate expression="driverOrderBean.doCancelOrder()" />
+        </transition>
+        <transition on="refresh">
+            <evaluate expression="driverOrderBean.refresh()" />
+        </transition>
+        <transition on="orderList" />
+        <transition on="myList" to="myListFlow" />
+        <transition on="userInfo" to="userInfoFlow" />
+        <transition on="logout" to="logoutFlow"/>
+    </view-state>
+
+    <view-state id="myListFlow" view="/pages/driver/my_list.xhtml">
+        <on-entry>
+            <evaluate expression="driverMyOrderBean.init()"/>
+        </on-entry>
+        <transition on="cancelOrder">
+            <evaluate expression="driverMyOrderBean.cancelOrder()"></evaluate>
+        </transition>
+        <transition on="viewOrder">
+            <evaluate expression="driverMyOrderBean.viewOrder( requestParameters.orderId )"></evaluate>
+        </transition>
+        <transition on="refresh">
+            <evaluate expression="driverMyOrderBean.refresh()" />
+        </transition>
+        <transition on="orderList" to="driver" />
+        <transition on="myList" />
+        <transition on="userInfo" to="userInfoFlow" />
+        <transition on="logout" to="logoutFlow"/>
+    </view-state>
+
+    <view-state id="userInfoFlow" view="/pages/driver/user.xhtml">
+        <on-entry>
+            <evaluate expression="driverUser.init()"/>
+        </on-entry>
+        <transition on="saveUser">
+            <evaluate expression="driverUser.saveUser()"></evaluate>
+        </transition>
+        <transition on="addCar">
+            <evaluate expression="driverUser.addCar()"></evaluate>
+        </transition>
+        <transition on="saveCar">
+            <evaluate expression="driverUser.saveCar()"></evaluate>
+        </transition>
+        <transition on="orderList" to="driver" />
+        <transition on="myList" to="myListFlow" />
+        <transition on="userInfo" />
+        <transition on="logout" to="logoutFlow"/>
+    </view-state>
+
+    <end-state id="logoutFlow" view="externalRedirect:contextRelative:/logout"/>
+
+</flow>

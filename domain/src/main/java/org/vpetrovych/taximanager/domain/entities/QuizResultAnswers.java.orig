@@ -1,0 +1,59 @@
+package com.od.eisgroup.interviewer.domain.entity;
+
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import java.util.Objects;
+
+/**
+ * <p>
+ *     This class is an entity of QuizResultAnswers.
+ * </p>
+ *
+ * @author Diana Lysenko
+ * @version 1.0
+ */
+
+//@Entity
+public class QuizResultAnswers extends AbstractEntity {
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(nullable = false, name = "quiz_result_id")
+    private QuizResult quizResult;
+
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(nullable = false, name = "question_id")
+    private QuizQuestion question;
+
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(nullable = false, name = "user_answer_id")
+    private QuizAnswer userAnswer;
+
+    public QuizQuestion getQuestion() {
+        return question;
+    }
+
+    public void setQuestion(QuizQuestion question) {
+        this.question = question;
+    }
+
+    public QuizAnswer getUserAnswer() {
+        return userAnswer;
+    }
+
+    public void setUserAnswer(QuizAnswer userAnswer) {
+        this.userAnswer = userAnswer;
+    }
+
+    public QuizResult getQuizResult() {
+        return quizResult;
+    }
+
+    public void setQuizResult(QuizResult quizResult) {
+        this.quizResult = quizResult;
+    }
+
+}

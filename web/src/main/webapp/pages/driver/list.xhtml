@@ -1,0 +1,176 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="../template/template_inner.xhtml">
+
+    <ui:define name="title">TaxiManager - Order list</ui:define>
+
+    <ui:define name="content">
+        <div class="order_list_wrap">
+            <h1>Order list</h1>
+            <div class="sort_bl">
+                <h3>Sort</h3>
+                <form action="">
+                    <div class="sel_bl">
+                        <h:form>
+                            <h:selectOneMenu value="#{adminOrderBean.sort}">
+                                <f:selectItem itemValue = "date.desc" itemLabel = "Registration time descending" />
+                                <f:selectItem itemValue = "date.asc" itemLabel = "Registration time increasing" />
+                                <f:selectItem itemValue = "price.desc" itemLabel = "Price descending" />
+                                <f:selectItem itemValue = "price.asc" itemLabel = "Price increasing" />
+                                <f:selectItem itemValue = "name.desc" itemLabel = "Street name descending" />
+                                <f:selectItem itemValue = "name.asc" itemLabel = "Street name increasing" />
+                                <p:ajax update="orderTablePanel" event="change"></p:ajax>
+                            </h:selectOneMenu>
+                        </h:form>
+                    </div>
+                </form>
+            </div>
+            <div class="clear"></div>
+            <p:panel  id="orderTablePanel">
+                <p:dataTable value="#{driverOrderBean.orders}" var="order" paginator="true" rows="10" paginatorPosition="bottom"
+                             paginatorTemplate="{PreviousPageLink} {PageLinks} {NextPageLink}">
+                    <p:column>
+                        <f:facet name = "header">Address</f:facet>
+                        <span class="from">#{order.addressFrom}</span>
+                        <i class="fa fa-arrow-right"></i>
+                        <span class="to">#{order.addressTo}</span>
+                    </p:column>
+                    <p:column>
+                        <f:facet name = "header">Registration time</f:facet>
+                        <h:outputText value="#{order.orderTime}" converter="dateToTimeConverter"></h:outputText> <!--converter="quiz.ZonedDateTimeConverter"-->
+                    </p:column>
+                    <p:column>
+                        <f:facet name = "header">Price</f:facet>
+                        <h:outputText value="#{order.price}"></h:outputText>
+                    </p:column>
+                    <p:column>
+                        <f:facet name = "header">
+                            <h:form>
+                                <h:commandLink value="" action="refresh" class="refresh">
+                                    <i class="fa fa-refresh"></i>
+                                    <p:ajax update="orderTablePanel"></p:ajax>
+                                </h:commandLink>
+                            </h:form>
+                        </f:facet>
+                        <h:form>
+                            <h:commandLink value="" action="viewOrder">
+                                <i class="fa fa-info-circle"></i>
+                                <f:param name="orderId" value="#{order.id}" />
+                            </h:commandLink>
+                        </h:form>
+                    </p:column>
+                </p:dataTable>
+            </p:panel >
+        </div>
+    </ui:define>
+
+    <ui:define name="popup">
+        <p:panel id="popupViewWrapper" autoUpdate="true">
+            <p:panel id="popupViewPanel" rendered="#{driverOrderBean.showPopup}">
+                <h:form>
+                    <h:commandLink value="" action="cancelOrder" class="popup_bg">
+                        <i class="fa fa-close"></i>
+                        <p:ajax update="popupViewWrapper"></p:ajax>
+                    </h:commandLink>
+                </h:form>
+                <ul class="popup_wrapper">
+                    <li class="popup_order_info">
+                        <div class="popup_inner">
+                            <h:form>
+                                <h:commandLink value="" action="cancelOrder" class="popup_close">
+                                    <i class="fa fa-close"></i>
+                                    <p:ajax update="popupViewWrapper"></p:ajax>
+                                </h:commandLink>
+                            </h:form>
+                            <h3>Order info</h3>
+                            <h:form id="viewOrderForm">
+                                <p>
+                                    <span class="info">From:</span>
+                                    <h:outputText value="#{driverOrderBean.orderEntity.addressFrom}"/>
+                                </p>
+                                <p>
+                                    <span class="info">To:</span>
+                                    <h:outputText value="#{driverOrderBean.orderEntity.addressTo}"/>
+                                </p>
+                                <p>
+                                    <span class="info">Price:</span>
+                                    <h:outputText value="#{driverOrderBean.orderEntity.price}"/>
+                                </p>
+                                <p>
+                                    <span class="info">Description:</span>
+                                    <h:outputText value="#{driverOrderBean.orderEntity.description}"/>
+                                </p>
+                                <h:commandButton type="submit" value="Accept" action="acceptOrder" class="sub button_link">
+                                    <p:ajax update="popupViewWrapper, popupDoWrapper"></p:ajax>
+                                </h:commandButton>
+                            </h:form>
+                        </div>
+                    </li>
+                </ul>
+                <script>
+                    jQuery(".popup_wrapper .tel").inputmask({alias: "phonemy"});
+                    update_popup();
+                </script>
+            </p:panel>
+        </p:panel>
+        <p:panel id="popupDoWrapper" autoUpdate="true">
+            <p:panel id="popupDoPanel" rendered="#{driverOrderBean.showDoPopup}">
+                <div class="popup_bg"></div>
+                <ul class="popup_wrapper">
+                    <li class="popup_order_accept">
+                        <div class="popup_inner">
+                            <h3>Order info</h3>
+                            <h:form id="doneOrderForm">
+                                <p>
+                                    <span class="info">Client number:</span>
+                                    <h:outputText value="#{driverOrderBean.orderEntity.customer.phone}"/>
+                                </p>
+                                <p>
+                                    <span class="info">Client name:</span>
+                                    <h:outputText value="#{driverOrderBean.orderEntity.customer.name}"/>
+                                </p>
+                                <p>
+                                    <span class="info">From:</span>
+                                    <h:outputText value="#{driverOrderBean.orderEntity.addressFrom}"/>
+                                </p>
+                                <p>
+                                    <span class="info">To:</span>
+                                    <h:outputText value="#{driverOrderBean.orderEntity.addressTo}"/>
+                                </p>
+                                <p>
+                                    <span class="info">Price:</span>
+                                    <h:outputText value="#{driverOrderBean.orderEntity.price}"/>
+                                </p>
+                                <p>
+                                    <span class="info">Description:</span>
+                                    <h:outputText value="#{driverOrderBean.orderEntity.description}"/>
+                                </p>
+                                <h:commandButton type="submit" value="Done" action="doneOrder" class="sub button_link">
+                                    <p:ajax update="popupDoWrapper, orderTablePanel"></p:ajax>
+                                </h:commandButton>
+                                <h:commandButton type="submit" value="Deny" action="returnOrder" class="sub button_link">
+                                    <p:ajax update="popupDoWrapper, orderTablePanel"></p:ajax>
+                                </h:commandButton>
+                                <h:commandButton type="submit" value="Cancel" action="doCancelOrder" class="sub button_link">
+                                    <p:ajax update="popupDoWrapper, orderTablePanel"></p:ajax>
+                                </h:commandButton>
+                            </h:form>
+                        </div>
+                    </li>
+                </ul>
+                <script>
+                    jQuery(".popup_wrapper .tel").inputmask({alias: "phonemy"});
+                    update_popup();
+                </script>
+            </p:panel>
+        </p:panel>
+    </ui:define>
+
+</ui:composition>
+
+</html>

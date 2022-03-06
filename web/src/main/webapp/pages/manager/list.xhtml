@@ -1,0 +1,168 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="../template/template_inner.xhtml">
+
+    <ui:define name="title">TaxiManager - Order list</ui:define>
+
+    <ui:define name="content">
+        <div class="order_list_wrap">
+            <h1>Order list</h1>
+            <div class="sort_bl manager_sort_bl">
+                <h3>Sort</h3>
+                <form action="">
+                    <div class="sel_bl">
+                        <h:form>
+                            <h:selectOneMenu value="#{adminOrderBean.sort}">
+                                <f:selectItem itemValue = "date.desc" itemLabel = "Registration time descending" />
+                                <f:selectItem itemValue = "date.asc" itemLabel = "Registration time increasing" />
+                                <f:selectItem itemValue = "price.desc" itemLabel = "Price descending" />
+                                <f:selectItem itemValue = "price.asc" itemLabel = "Price increasing" />
+                                <f:selectItem itemValue = "name.desc" itemLabel = "Street name descending" />
+                                <f:selectItem itemValue = "name.asc" itemLabel = "Street name increasing" />
+                                <p:ajax update="orderTablePanel" event="change"></p:ajax>
+                            </h:selectOneMenu>
+                        </h:form>
+                    </div>
+                </form>
+            </div>
+            <div class="manager_menu">
+                <h:form>
+                    <h:commandLink value="Add order" action="add" class="button_link" >
+                        <p:ajax update="popupAddWrapper"></p:ajax>
+                    </h:commandLink>
+                </h:form>
+            </div>
+            <div class="clear"></div>
+            <p:panel  id="orderTablePanel">
+                <p:dataTable value="#{managerOrderBean.orders}" var="order" paginator="true" rows="10" paginatorPosition="bottom"
+                             paginatorTemplate="{PreviousPageLink} {PageLinks} {NextPageLink}">
+                    <p:column>
+                        <f:facet name = "header">Address</f:facet>
+                        <span class="from">#{order.addressFrom}</span>
+                        <i class="fa fa-arrow-right"></i>
+                        <span class="to">#{order.addressTo}</span>
+                    </p:column>
+                    <p:column>
+                        <f:facet name = "header">Registration time</f:facet>
+                        <h:outputText value="#{order.orderTime}" converter="dateToTimeConverter"></h:outputText> <!--converter="quiz.ZonedDateTimeConverter"-->
+                    </p:column>
+                    <p:column>
+                        <f:facet name = "header">Price</f:facet>
+                        <h:outputText value="#{order.price}"></h:outputText>
+                    </p:column>
+                    <p:column>
+                        <f:facet name = "header">
+                            <h:form>
+                                <h:commandLink value="" action="refresh" class="refresh">
+                                    <i class="fa fa-refresh"></i>
+                                    <p:ajax update="orderTablePanel"></p:ajax>
+                                </h:commandLink>
+                            </h:form>
+                        </f:facet>
+                        <h:form>
+                            <h:commandLink value="" action="editOrder">
+                                <i class="fa fa-pencil"></i>
+                                <f:param name="orderId" value="#{order.id}" />
+                            </h:commandLink>
+                            <h:commandLink value="" action="deleteOrder">
+                                <i class="fa fa-times-circle"></i>
+                                <f:param name="orderId" value="#{order.id}" />
+                            </h:commandLink>
+                        </h:form>
+                    </p:column>
+                </p:dataTable>
+            </p:panel >
+        </div>
+    </ui:define>
+
+    <ui:define name="popup">
+        <p:panel id="popupAddWrapper" autoUpdate="true">
+            <p:panel id="popupAddPanel" rendered="#{managerOrderBean.showPopup}">
+                <h:form>
+                    <h:commandLink value="" action="cancelOrder" class="popup_bg">
+                        <i class="fa fa-close"></i>
+                        <p:ajax update="popupAddWrapper"></p:ajax>
+                    </h:commandLink>
+                </h:form>
+                <ul class="popup_wrapper">
+                    <li class="popup_order_create">
+                        <div class="popup_inner">
+                            <h:form>
+                                <h:commandLink value="" action="cancelOrder" class="popup_close">
+                                    <i class="fa fa-close"></i>
+                                    <p:ajax update="popupAddWrapper"></p:ajax>
+                                </h:commandLink>
+                            </h:form>
+                            <h3>#{managerOrderBean.popupTitle}</h3>
+                            <h:form id="newOrderForm">
+                                <p>
+                                    <h:outputLabel for="orderPhoneInput" value="Client phone:"/>
+                                    <h:inputText autocomplete="off" id="orderPhoneInput" class="tel" value="#{managerOrderBean.orderEntity.customer.phone}" required="true"
+                                                 requiredMessage="This field is required."  placeholder="+38(___)___-__-__">
+                                        <f:validator validatorId="phone-validator" />
+                                        <p:ajax update="@this popupAddWrapper" event="change" />
+                                    </h:inputText>
+                                    <h:message  class="error_message" for="orderPhoneInput" id="orderPhoneError" />
+                                </p>
+                                <p>
+                                    <h:outputLabel for="orderCustomerInput" value="Client name:"/>
+                                    <h:inputText autocomplete="off" id="orderCustomerInput" class="text" value="#{managerOrderBean.orderEntity.customer.name}" required="true"
+                                                 requiredMessage="This field is required.">
+                                        <p:ajax update="@this popupAddWrapper" event="change" />
+                                    </h:inputText>
+                                    <h:message  class="error_message" for="orderCustomerInput" id="orderCustomerError" />
+                                </p>
+                                <p>
+                                    <h:outputLabel for="orderFromInput" value="Address from:"/>
+                                    <h:inputText autocomplete="off" id="orderFromInput" class="text" value="#{managerOrderBean.orderEntity.addressFrom}" required="true"
+                                                 requiredMessage="This field is required.">
+                                        <p:ajax update="@this popupAddWrapper" event="change" />
+                                    </h:inputText>
+                                    <h:message  class="error_message" for="orderFromInput" id="orderFromError" />
+                                </p>
+                                <p>
+                                    <h:outputLabel for="orderToInput" value="Address to:"/>
+                                    <h:inputText autocomplete="off" id="orderToInput" class="text" value="#{managerOrderBean.orderEntity.addressTo}" required="true"
+                                                 requiredMessage="This field is required.">
+                                        <p:ajax update="@this popupAddWrapper" event="change" />
+                                    </h:inputText>
+                                    <h:message  class="error_message" for="orderToInput" id="orderToError" />
+                                </p>
+                                <p>
+                                    <h:outputLabel for="orderPriceInput" value="Price:"/>
+                                    <h:inputText autocomplete="off" id="orderPriceInput" class="text" value="#{managerOrderBean.orderEntity.price}" required="true"
+                                                 requiredMessage="This field is required.">
+                                        <p:ajax update="@this popupAddWrapper" event="change" />
+                                    </h:inputText>
+                                    <h:message  class="error_message" for="orderPriceInput" id="orderPriceError" />
+                                </p>
+                                <p>
+                                    <h:outputLabel for="orderDescInput" value="Description:"/>
+                                    <h:inputTextarea autocomplete="off"  id="orderDescInput" value="#{managerOrderBean.orderEntity.description}">
+                                        <p:ajax update="@this popupAddWrapper" event="change" />
+                                    </h:inputTextarea>
+                                    <h:message  class="error_message" for="orderDescInput" id="orderDescError" />
+                                </p>
+                                <h:commandButton type="submit" value="#{managerOrderBean.popupButtonName}" action="saveOrder" class="sub button_link">
+                                    <p:ajax update="popupAddWrapper, orderTablePanel"></p:ajax>
+                                </h:commandButton>
+                            </h:form>
+                        </div>
+                    </li>
+                </ul>
+                <script>
+                    jQuery(".popup_wrapper .tel").inputmask({alias: "phonemy"});
+                    update_popup();
+                </script>
+            </p:panel>
+        </p:panel>
+    </ui:define>
+
+</ui:composition>
+
+</html>

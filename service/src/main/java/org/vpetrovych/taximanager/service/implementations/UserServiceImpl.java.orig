@@ -1,0 +1,204 @@
+package com.od.eisgroup.interviewer.service.implementations;
+
+import com.od.eisgroup.interviewer.dao.interfaces.UserDao;
+import com.od.eisgroup.interviewer.domain.converter.UserDetailsDtoToUserConverter;
+import com.od.eisgroup.interviewer.domain.dto.UserDetailsDto;
+import com.od.eisgroup.interviewer.domain.dto.UserDto;
+import com.od.eisgroup.interviewer.domain.dto.UserInfoDto;
+import com.od.eisgroup.interviewer.domain.dto.UserSearchDto;
+import com.od.eisgroup.interviewer.domain.entity.Position;
+import com.od.eisgroup.interviewer.domain.entity.Role;
+import com.od.eisgroup.interviewer.domain.entity.User;
+import com.od.eisgroup.interviewer.service.interfaces.PositionService;
+import com.od.eisgroup.interviewer.service.interfaces.RoleService;
+import com.od.eisgroup.interviewer.service.interfaces.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
+
+import javax.persistence.EntityNotFoundException;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+public class UserServiceImpl implements UserService {
+
+    private UserDao userDao;
+    private UserDetailsService userDetailsService;
+    private AuthenticationManager authenticationManager;
+    private PositionService positionService;
+    private RoleService roleService;
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    public void setUserDao(UserDao userDao) {
+        this.userDao = userDao;
+    }
+
+    @Autowired
+    public void setPositionService(PositionService positionService) {
+        this.positionService = positionService;
+    }
+
+    @Autowired
+    public void setRoleService(RoleService roleService) {
+        this.roleService = roleService;
+    }
+
+    @Autowired
+    public void setUserDetailsService(UserDetailsService userDetailsService) {
+        this.userDetailsService = userDetailsService;
+    }
+
+    @Autowired
+    public void setAuthenticationManager(AuthenticationManager authenticationManager) {
+        this.authenticationManager = authenticationManager;
+    }
+
+    @Autowired
+    public void setPasswordEncoder(PasswordEncoder passwordEncoder){
+        this.passwordEncoder = passwordEncoder;
+    }
+
+    @Override
+    public Optional<User> findUserByEmail(String email) {
+        return userDao.findUserByEmail(email);
+    }
+
+    @Override
+    public void saveUser(UserDetailsDto userDetailsDto) {
+        User user = new UserDetailsDtoToUserConverter().convert(userDetailsDto);
+        userDao.save(user);
+    }
+
+    private void encodePassword(User user){
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+    }
+
+    @Override
+    @Transactional
+    public void changePassword(String email, String oldPassword, String newPassword) throws AuthenticationException {
+        Assert.notNull(email, "Email must not be null");
+        Assert.notNull(oldPassword, "Old password must not be null");
+        Assert.notNull(newPassword, "New password must not be null");
+
+        UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails,
+                oldPassword, userDetails.getAuthorities());
+
+        //throws AuthenticationException
+        authenticationManager.authenticate(authenticationToken);
+
+        User user = findUserByEmail(email).orElseThrow(() -> new UsernameNotFoundException(email));
+
+        user.setPassword(newPassword);
+        encodePassword(user);
+        userDao.save(user);
+    }
+
+    @Override
+    @Transactional
+    public void register(UserDetailsDto userDetailsDto) throws AuthenticationException {
+        Assert.notNull(userDetailsDto, "The userDetailsDto argument must not be null");
+        Assert.hasText(userDetailsDto.getEmail(), "The user's email must not be empty or blank");
+        Assert.hasText(userDetailsDto.getPassword(), "The user's password must not be empty or blank");
+        Assert.hasText(userDetailsDto.getFirstName(), "The user's first name must not be empty or blank");
+        Assert.hasText(userDetailsDto.getLastName(), "The user's last name must not be empty or blank");
+
+        if (findUserByEmail(userDetailsDto.getEmail()).isPresent()) {
+            throw new BadCredentialsException(String.format("User with email [%s] already exists", userDetailsDto.getEmail()));
+        }
+
+        User user = new UserDetailsDtoToUserConverter().convert(userDetailsDto);
+        encodePassword(user);
+        userDao.save(user);
+    }
+
+    @Override
+    public void login(String email, String password) throws AuthenticationException {
+        UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails,
+                password, userDetails.getAuthorities());
+
+        authenticationManager.authenticate(authenticationToken);
+
+        if (authenticationToken.isAuthenticated()) {
+            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+        }
+    }
+
+    @Override
+    public void addUser(UserDto userDto) {
+        Assert.notNull(userDto.getFirstName(), "first name must not be null");
+        Assert.notNull(userDto.getLastName(), "last name must not be null");
+        Assert.notNull(userDto.getEmail(), "email must not be null");
+        Assert.notNull(userDto.getPassword(), "password must not be null");
+        Assert.notNull(userDto.getPositionTitle(), "position must not be null");
+        Assert.notNull(userDto.getRoleNames(), "roles must not be null");
+
+        User user = new User();
+        user.setFirstName(userDto.getFirstName());
+        user.setLastName(userDto.getLastName());
+        user.setEmail(userDto.getEmail());
+        user.setPassword(userDto.getPassword());
+
+        List<String> roleNames = userDto.getRoleNames();
+        List<Role> roles;
+        if (roleNames.isEmpty()) {
+            roles = roleService.findAllDefaultRoles();
+        } else {
+            roles = roleService.findRoles(roleNames);
+        }
+        user.getRoles().addAll(roles);
+
+        String positionTitle = userDto.getPositionTitle();
+        Position position = positionService.findByTitle(positionTitle);
+        user.setPosition(position);
+
+        userDao.save(user);
+    }
+
+    @Override
+    public void deleteUser(Long userId) {
+        Assert.notNull(userId, "user id should be specified");
+        User user = findById(userId);
+        userDao.delete(user);
+    }
+
+    private User findById(Long userId) {
+        User user = userDao.findById(userId);
+        if (user == null) {
+            throw new EntityNotFoundException("User is not found");
+        }
+        return user;
+    }
+
+    @Override
+    public List<UserInfoDto> findUserInfo(UserSearchDto userSearchDto, int page, int size) {
+        List<User> users = userDao.findUsersByCriteria(userSearchDto, size, page);
+        return users.stream()
+                .map(u -> {
+                    UserInfoDto userInfoDto = new UserInfoDto();
+                    userInfoDto.setFirstName(u.getFirstName());
+                    userInfoDto.setLastName(u.getLastName());
+                    userInfoDto.setEmail(u.getEmail());
+                    Position position = u.getPosition();
+                    if (position != null) {
+                        userInfoDto.setPositionTitle(position.getTitle());
+                    }
+                    userInfoDto.setLastEvaluationDate(u.getLastEvaluationDate());
+                    userInfoDto.setLastQuizPassingDate(u.getLastQuizPassingDate());
+                    return userInfoDto;
+                })
+                .collect(Collectors.toList());
+    }
+}

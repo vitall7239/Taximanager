@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!--Scan java configuration files-->
+    <context:component-scan base-package="org.vpetrovych.taximanager.dao.configuration"/>
+
+    <bean id="userService" class="org.vpetrovych.taximanager.service.implementations.UserServiceImpl"/>
+    <bean id="userDetailsService" class="org.vpetrovych.taximanager.service.implementations.UserDetailsServiceImpl"/>
+    <bean id="orderService" class="org.vpetrovych.taximanager.service.implementations.OrderServiceImpl" />
+    <bean id="carService" class="org.vpetrovych.taximanager.service.implementations.CarServiceImpl" />
+</beans>

@@ -1,0 +1,338 @@
+package com.od.eisgroup.interviewer.service.implementations;
+
+import com.od.eisgroup.interviewer.dao.interfaces.QuizAnswerDao;
+import com.od.eisgroup.interviewer.dao.interfaces.QuizDao;
+import com.od.eisgroup.interviewer.dao.interfaces.QuizQuestionDao;
+import com.od.eisgroup.interviewer.domain.converter.QuizToQuizDto;
+import com.od.eisgroup.interviewer.domain.dto.QuizAnswerDto;
+import com.od.eisgroup.interviewer.domain.dto.QuizDto;
+import com.od.eisgroup.interviewer.domain.dto.QuizFullDto;
+import com.od.eisgroup.interviewer.domain.dto.QuizQuestionDto;
+import com.od.eisgroup.interviewer.domain.dto.QuizQuestionFullDto;
+import com.od.eisgroup.interviewer.domain.entity.Quiz;
+import com.od.eisgroup.interviewer.domain.entity.QuizAnswer;
+import com.od.eisgroup.interviewer.domain.entity.QuizQuestion;
+import com.od.eisgroup.interviewer.domain.entity.QuizStatus;
+import com.od.eisgroup.interviewer.service.interfaces.QuizService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * <p>
+ *     This class is implementation of QuizService
+ * </p>
+ *
+ * @author Vitalii Petrovych
+ * @version 1.0
+ */
+@Service
+@Transactional
+public class QuizServiceImpl implements QuizService {
+
+    private QuizDao quizDao;
+    private QuizQuestionDao quizQuestionDao;
+    private QuizAnswerDao quizAnswerDao;
+
+    @Autowired
+    public void setQuizDao(QuizDao quizDao) {
+        this.quizDao = quizDao;
+    }
+
+    @Autowired
+    public void setQuizQuestionDao(QuizQuestionDao quizQuestionDao) {
+        this.quizQuestionDao = quizQuestionDao;
+    }
+
+    @Autowired
+    public void setQuizAnswerDao(QuizAnswerDao quizAnswerDao) {
+        this.quizAnswerDao = quizAnswerDao;
+    }
+
+    private QuizToQuizDto quizToQuizDto;
+
+    @Autowired
+    public void setQuizToQuizDtoConverter(QuizToQuizDto quizToQuizDto) {
+        this.quizToQuizDto = quizToQuizDto;
+    }
+
+    @Override
+    public QuizFullDto addQuiz() {
+        List<QuizAnswerDto> answerDtoList = new ArrayList<>();
+        answerDtoList.add( new QuizAnswerDto("Answer text",true) );
+        QuizQuestionFullDto quizQuestionFullDto = new QuizQuestionFullDto("Question text",answerDtoList);
+        List<QuizQuestionFullDto> questionFullDtoList = new ArrayList<>();
+        questionFullDtoList.add(quizQuestionFullDto);
+        ZonedDateTime calendar = ZonedDateTime.now();
+        return new QuizFullDto("Quiz Title", calendar, QuizStatus.PUBLIC, false, questionFullDtoList);
+    }
+
+    @Override
+    public void addQuestion(QuizFullDto quizDto) {
+        if(quizDto != null) {
+            List<QuizAnswerDto> answerDtoList = new ArrayList<>();
+            answerDtoList.add(new QuizAnswerDto("Answer test", true));
+            quizDto.getQuestionList().add(new QuizQuestionFullDto("Question text", answerDtoList));
+        }
+    }
+
+    @Override
+    public void addAnswer(QuizQuestionFullDto quizQuestionFullDto) {
+        if(quizQuestionFullDto != null) {
+            quizQuestionFullDto.getAnswerList().add(new QuizAnswerDto("Answer text", false));
+        }
+    }
+
+    @Override
+    public void deleteAnswer(QuizAnswerDto quizAnswerDto, QuizQuestionFullDto quizQuestionFullDto) {
+        if(quizAnswerDto != null && quizQuestionFullDto != null){
+            quizQuestionFullDto.getAnswerList().remove(quizAnswerDto);
+            if(quizAnswerDto.getId() != null){
+                QuizAnswer entity = quizAnswerDao.findById(quizAnswerDto.getId());
+                quizAnswerDao.delete(entity);
+            }
+        }
+    }
+
+    @Override
+    public void deleteQuestion(QuizQuestionFullDto quizQuestionFullDto, QuizFullDto quizDto) {
+        if(quizQuestionFullDto != null && quizDto != null){
+            quizDto.getQuestionList().remove(quizQuestionFullDto);
+            if(!quizQuestionFullDto.getAnswerList().isEmpty()){
+                for(int i = 0; i<quizQuestionFullDto.getAnswerList().size(); i++){
+                    deleteAnswer(quizQuestionFullDto.getAnswerList().get(i), quizQuestionFullDto);
+                }
+            }
+            if(quizQuestionFullDto.getId() != null){
+                QuizQuestion entity = quizQuestionDao.findById(quizQuestionFullDto.getId());
+                quizQuestionDao.delete(entity);
+            }
+        }
+    }
+
+    @Override
+    public void saveQuiz(QuizFullDto quizDto) {
+        if(quizDto != null){
+            //save new quiz
+            Quiz quiz;
+            if(quizDto.getId() == null){
+                quiz = new Quiz();
+            }else {
+                quiz = quizDao.findById(quizDto.getId());
+            }
+            quiz.setCreationDate(quizDto.getCreationDate());
+            quiz.setTitle(quizDto.getTitle());
+            quiz.setStatus(quizDto.getStatus());
+            if (quizDto.getId() == null) {
+                quizDao.save(quiz);
+                quizDto.setId(quiz.getId());
+            } else {
+                quizDao.update(quiz);
+            }
+            QuizQuestion tempQuestion;
+            QuizAnswer tempAnswer;
+            for(int i = 0; i < quizDto.getQuestionList().size(); i++){
+                if(quizDto.getQuestionList().get(i).getId() == null){
+                    tempQuestion = new QuizQuestion();
+                    tempQuestion.setText(quizDto.getQuestionList().get(i).getText());
+                    tempQuestion.setQuiz(quiz);
+                    quizQuestionDao.save(tempQuestion);
+                    quizDto.getQuestionList().get(i).setId(tempQuestion.getId());
+                    //update old question
+                }else{
+                    tempQuestion = quizQuestionDao.findById(quizDto.getQuestionList().get(i).getId());
+                    tempQuestion.setText(quizDto.getQuestionList().get(i).getText());
+                    quizQuestionDao.update(tempQuestion);
+                }
+                for(int j = 0; j < quizDto.getQuestionList().get(i).getAnswerList().size(); j++){
+                    //save new answer
+                    if(quizDto.getQuestionList().get(i).getAnswerList().get(j).getId() == null){
+                        tempAnswer = new QuizAnswer();
+                        tempAnswer.setText(quizDto.getQuestionList().get(i).getAnswerList().get(j).getText());
+                        tempAnswer.setCorrect(quizDto.getQuestionList().get(i).getAnswerList().get(j).isCorrect());
+                        tempAnswer.setQuestion(tempQuestion);
+                        quizAnswerDao.save(tempAnswer);
+                        quizDto.getQuestionList().get(i).getAnswerList().get(j).setId(tempAnswer.getId());
+                        //update old answer
+                    }else{
+                        tempAnswer = quizAnswerDao.findById(quizDto.getQuestionList().get(i).getAnswerList().get(j).getId());
+                        tempAnswer.setText(quizDto.getQuestionList().get(i).getAnswerList().get(j).getText());
+                        tempAnswer.setCorrect(quizDto.getQuestionList().get(i).getAnswerList().get(j).isCorrect());
+                        quizAnswerDao.update(tempAnswer);
+                    }
+                }
+            }
+        }
+    }
+
+    @Override
+    public QuizFullDto getFullQuiz(Long ind) {
+        Quiz quiz = quizDao.findById(ind);
+        if(quiz != null) {
+            List<QuizQuestion> questionList = quizQuestionDao.findByQuizId(quiz.getId());
+            List<List<QuizAnswer>> answerList = new ArrayList<>();
+            for (int i = 0; i < questionList.size(); i++) {
+                answerList.add(quizAnswerDao.findByQuestionId(questionList.get(i).getId()));
+            }
+            List<List<QuizAnswerDto>> answerDtoList = new ArrayList<>();
+            for (int i = 0; i < answerList.size(); i++) {
+                List<QuizAnswerDto> tempAnswer = new ArrayList<>();
+                for (int j = 0; j < answerList.get(i).size(); j++) {
+                    tempAnswer.add(new QuizAnswerDto(answerList.get(i).get(j).getId(),
+                            answerList.get(i).get(j).getText(),
+                            answerList.get(i).get(j).isCorrect()));
+                }
+                answerDtoList.add(tempAnswer);
+            }
+            List<QuizQuestionFullDto> questionDtoFullList = new ArrayList<>();
+            for (int i = 0; i < questionList.size(); i++) {
+                questionDtoFullList.add(new QuizQuestionFullDto(questionList.get(i).getId(),
+                        questionList.get(i).getText(),
+                        answerDtoList.get(i)));
+            }
+            return new QuizFullDto(quiz.getId(),
+                    quiz.getTitle(),
+                    quiz.getCreationDate(),
+                    quiz.getStatus(),
+                    quiz.isPassed(),
+                    questionDtoFullList);
+        }else{
+            return null;
+        }
+    }
+    @Override
+    public QuizDto getQuiz(Long ind) {
+        Quiz quiz = quizDao.findById(ind);
+        if(quiz != null) {
+            return quizToQuizDto.convert(quiz);
+        }else{
+            return null;
+        }
+    }
+
+    @Override
+    public List<QuizDto> getQuizzesList(int startPosition, int amount) {
+        List<QuizDto> quizDtoList = new ArrayList<>();
+        List<Quiz> quizList = quizDao.findQuizLimit(startPosition, amount);
+        for(int i = 0; i<quizList.size(); i++){
+            quizDtoList.add( quizToQuizDto.convert( quizList.get(i) ) );
+        }
+        return quizDtoList;
+    }
+
+    @Override
+    public List<QuizDto> getQuizzesListWithStatus(int startPosition, int amount, QuizStatus status) {
+        List<QuizDto> quizDtoList = new ArrayList<>();
+        List<Quiz> quizList = quizDao.findQuizLimitByStatus(startPosition, amount, status);
+        for(int i = 0; i<quizList.size(); i++){
+            quizDtoList.add( quizToQuizDto.convert( quizList.get(i) ) );
+        }
+        return quizDtoList;
+    }
+
+    @Override
+    public List<QuizDto> getAllQuizzesList() {
+        List<QuizDto> quizDtoList = new ArrayList<>();
+        if(quizDao != null) {
+            List<Quiz> quizList = quizDao.findAll();
+            for (int i = 0; i < quizList.size(); i++) {
+                quizDtoList.add(quizToQuizDto.convert(quizList.get(i)));
+            }
+        }
+        return quizDtoList;
+    }
+
+    @Override
+    public List<QuizDto> getAllQuizzesListWithStatus(QuizStatus status) {
+        List<QuizDto> quizDtoList = new ArrayList<>();
+        List<Quiz> quizList = quizDao.findAllWithStatus(status);
+        for(int i = 0; i<quizList.size(); i++){
+            quizDtoList.add( quizToQuizDto.convert( quizList.get(i) ) );
+        }
+        return quizDtoList;
+    }
+
+    @Override
+    public void deleteQuiz(QuizDto quizDto) {
+        if(quizDto != null){
+            if(quizDto.isPassed()){
+                Quiz entity = quizDao.findById(quizDto.getId());
+                entity.setStatus(QuizStatus.HIDDEN);
+                quizDao.save(entity);
+                quizDto.setStatus(QuizStatus.HIDDEN);
+            }else{
+                Quiz quizEntity = quizDao.findById(quizDto.getId());
+                List<QuizQuestion> quizQuestionEntityList = quizQuestionDao.findByQuizId(quizEntity.getId());
+                List<QuizAnswer> quizAnswerEntityList = new ArrayList<>();
+                for(int i = 0; i<quizQuestionEntityList.size(); i++){
+                    quizAnswerEntityList.addAll( quizAnswerDao.findByQuestionId( quizQuestionEntityList.get(i).getId() ) );
+                }
+                quizAnswerDao.deleteAll(quizAnswerEntityList);
+                quizQuestionDao.deleteAll(quizQuestionEntityList);
+                quizDao.delete(quizEntity);
+            }
+        }
+    }
+
+    @Override
+    public void activateQuiz(QuizDto quizDto) {
+        if(quizDto != null) {
+            quizDto.setStatus(QuizStatus.PUBLIC);
+            Quiz entity = quizDao.findById(quizDto.getId());
+            entity.setStatus(QuizStatus.PUBLIC);
+            quizDao.save(entity);
+        }
+    }
+
+    @Override
+    public QuizQuestionDto getQuizQuestion(Long ind) {
+        QuizQuestion quest = quizQuestionDao.findById(ind);
+        if(quest != null) {
+            return new QuizQuestionDto(quest.getId(),
+                    quest.getText());
+        }else{
+            return null;
+        }
+    }
+
+    @Override
+    public QuizQuestionFullDto getQuizQuestionFull(Long ind) {
+        QuizQuestion quest = quizQuestionDao.findById(ind);
+        if(quest != null) {
+            List<QuizAnswer> answersList = quizAnswerDao.findByQuestionId(quest.getId());
+            List<QuizAnswerDto> answerDtoList = new ArrayList<>();
+            for(int i = 0; i<answersList.size(); i++) {
+                answerDtoList.add( getQuizAnswer( answersList.get(i).getId() ) );
+            }
+            return new QuizQuestionFullDto(quest.getId(),
+                    quest.getText(),
+                    answerDtoList);
+        }else{
+            return null;
+        }
+    }
+
+    @Override
+    public QuizAnswerDto getQuizAnswer(Long ind) {
+        QuizAnswer ans = quizAnswerDao.findById(ind);
+        if(ans != null) {
+            return new QuizAnswerDto(ans.getId(),
+                    ans.getText(),
+                    ans.isCorrect());
+        }else{
+            return null;
+        }
+    }
+
+    @Override
+    public void deprecateQuiz(Long ind) {
+        Quiz quiz = quizDao.findById(ind);
+        if(quiz != null) {
+            quiz.setStatus(QuizStatus.HIDDEN);
+        }
+    }
+}

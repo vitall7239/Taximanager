@@ -1,0 +1,145 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="../template/template_inner.xhtml">
+
+    <ui:define name="title">TaxiManager - My info</ui:define>
+
+    <ui:define name="content">
+        <div class="user_wrap">
+            <h1>My info</h1>
+            <div class="user_form_wrap">
+                <h:form id="userForm">
+                    <p>
+                        <h:outputLabel for="userPhoneInput" value="Phone:"/>
+                        <h:inputText autocomplete="off" disabled="true" id="userPhoneInput" class="tel" value="#{driverUser.user.phone}" />
+                        <h:message  class="error_message" for="userPhoneInput" id="userPhoneError" />
+                    </p>
+                    <p>
+                        <h:outputLabel for="userEmailInput" value="Email:"/>
+                        <h:inputText autocomplete="off" disabled="true" id="userEmailInput" value="#{driverUser.user.email}" />
+                        <h:message for="userEmailInput" class="error_message" id="userEmailError" />
+                    </p>
+                    <p>
+                        <h:outputLabel for="ageInput" value="Age:"/>
+                        <h:inputText autocomplete="off" id="ageInput" value="#{driverUser.user.age}" required="true" requiredMessage="This field is required.">
+                            <f:validator validatorId="age-validator" />
+                            <p:ajax update="@this" event="change" />
+                        </h:inputText>
+                        <h:message for="ageInput" class="error_message" id="ageError" />
+                    </p>
+                    <p>
+                        <h:outputLabel for="firstNameInput" value="Name:"/>
+                        <h:inputText autocomplete="off" id="firstNameInput" value="#{driverUser.user.firstName}" required="true"
+                                     requiredMessage="This field is required.">
+                            <f:validator validatorId="user-name-validator" />
+                            <p:ajax update="@this" event="change" />
+                        </h:inputText>
+                        <h:message for="firstNameInput" class="error_message" id="firstNameError" />
+                    </p>
+                    <p>
+                        <h:outputLabel for="lastNameInput" value="Surname:"/>
+                        <h:inputText autocomplete="off" id="lastNameInput" value="#{driverUser.user.lastName}" required="true"
+                                     requiredMessage="This field is required.">
+                            <f:validator validatorId="user-name-validator" />
+                            <p:ajax update="@this" event="change" />
+                        </h:inputText>
+                        <h:message for="lastNameInput" class="error_message" id="lastNameError" />
+                    </p>
+                    <p>
+                        <h:outputLabel for="fatherNameInput" value="Middle name:"/>
+                        <h:inputText autocomplete="off" id="fatherNameInput" value="#{driverUser.user.fatherName}" required="true"
+                                     requiredMessage="This field is required.">
+                            <f:validator validatorId="user-name-validator" />
+                            <p:ajax update="@this" event="change" />
+                        </h:inputText>
+                        <h:message for="fatherNameInput" class="error_message" id="fatherNameError" />
+                    </p>
+                    <div class="clear"></div>
+                    <div class="link">
+                        <h:commandButton value="Save" class="button_link" action="saveUser">
+                            <p:ajax update="@this"/>
+                        </h:commandButton>
+                    </div>
+                </h:form>
+            </div>
+            <div class="car_form_wrap">
+                <p:panel id="carWrapper" autoUpdate="true">
+                    <p:panel id="car_link" rendered="#{!driverUser.showCarForm}">
+                        <div class="add_car_link">
+                            <h:form>
+                                <h:commandLink action="addCar" value="Add vehicle info" class="button_link">
+                                    <p:ajax update="@this carWrapper" />
+                                </h:commandLink>
+                            </h:form>
+                        </div>
+                    </p:panel>
+                    <p:panel id="carForm" rendered="#{driverUser.showCarForm}">
+                        <div class="car_form">
+                            <h:form>
+                                <p>
+                                    <h:outputLabel for="markInput" value="Vehicle brand:"/>
+                                    <h:inputText autocomplete="off" id="markInput" value="#{driverUser.car.mark}" required="true" requiredMessage="This field is required.">
+                                        <p:ajax update="@this" event="change" />
+                                    </h:inputText>
+                                    <h:message for="markInput" class="error_message" id="markError" />
+                                </p>
+                                <p>
+                                    <h:outputLabel for="modelInput" value="Vehicle model:"/>
+                                    <h:inputText autocomplete="off" id="modelInput" value="#{driverUser.car.model}" required="true" requiredMessage="This field is required.">
+                                        <p:ajax update="@this" event="change" />
+                                    </h:inputText>
+                                    <h:message for="modelInput" class="error_message" id="modelError" />
+                                </p>
+                                <p>
+                                    <h:outputLabel for="yearInput" value="Vehicle manufactured year:"/>
+                                    <h:inputText autocomplete="off" id="yearInput" value="#{driverUser.car.year}" required="true" requiredMessage="This field is required.">
+                                        <p:ajax update="@this" event="change" />
+                                    </h:inputText>
+                                    <h:message for="yearInput" class="error_message" id="yearError" />
+                                </p>
+                                <p>
+                                    <h:outputLabel for="colorInput" value="Vehicle color:"/>
+                                    <h:inputText autocomplete="off" id="colorInput" value="#{driverUser.car.color}" required="true" requiredMessage="This field is required.">
+                                        <p:ajax update="@this carForm" event="change" />
+                                    </h:inputText>
+                                    <h:message for="colorInput" class="error_message" id="colorError" />
+                                </p>
+                                <p>
+                                    <h:outputLabel for="numberInput" value="Plate number:"/>
+                                    <h:inputText autocomplete="off" id="numberInput" value="#{driverUser.car.number}" required="true" requiredMessage="This field is required.">
+                                        <p:ajax update="@this" event="change" />
+                                    </h:inputText>
+                                    <h:message for="numberInput" class="error_message" id="numberError" />
+                                </p>
+                                <p>
+                                    <h:outputLabel for="driverNumberInput" value="Driver license number:"/>
+                                    <h:inputText autocomplete="off" id="driverNumberInput" value="#{driverUser.car.driverNumber}" required="true" requiredMessage="This field is required.">
+                                        <p:ajax update="@this" event="change" />
+                                    </h:inputText>
+                                    <h:message for="driverNumberInput" class="error_message" id="driverNumberError" />
+                                </p>
+                                <div class="clear"></div>
+                                <div class="link">
+                                    <h:commandButton value="Save" class="button_link" action="saveCar">
+                                        <p:ajax update="carWrapper" />
+                                    </h:commandButton>
+                                </div>
+                            </h:form>
+                        </div>
+                    </p:panel>
+                </p:panel>
+            </div>
+        </div>
+    </ui:define>
+
+    <ui:define name="popup">
+    </ui:define>
+
+</ui:composition>
+
+</html>

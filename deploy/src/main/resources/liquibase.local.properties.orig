@@ -1,0 +1,5 @@
+changeLogFile=changelog.xml
+driver=oracle.jdbc.driver.OracleDriver
+url=jdbc:oracle:thin:@odsstudora01.exigengroup.com:1521:testdb
+username=vpetrovych
+password=vpetrovych

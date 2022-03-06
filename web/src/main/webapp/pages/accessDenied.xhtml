@@ -1,0 +1,26 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<ui:composition template="template/template.xhtml">
+
+    <ui:define name = "title">TaxiManager - Access denied</ui:define>
+
+    <ui:define name="content">
+        <div class="welcome_wrap">
+            <div class="welcome_block">
+                <div class="text">Access denied</div>
+                <p>Please login before using this app</p>
+                <div class="other_link">
+                    <h:form>
+                        <h:link outcome="/flows/login?faces-redirect=true" class="button_link reg" value="Back to main page" />
+                    </h:form>
+                </div>
+            </div>
+        </div>
+    </ui:define>
+
+</ui:composition>
+
+</html>
